@@ -1,6 +1,6 @@
-# cpsc5250hw
+# Daily Recorder App
 
-CPSC5250 homework app.
+An application include emotion, diet, workout recorder pages.
 
 ## Getting Started
 
