@@ -46,13 +46,15 @@ class _EmotionRecordState extends State<EmotionRecordForm>{
   final TextEditingController _dateController = TextEditingController();
 
   void _onSavePressed(){
-    print("User selected " +_emotionController.text + " emotion and pressed save!");
+    print("User selected " + _emotionController.text + " emotion and pressed save!");
     if(_formKey.currentState?.validate()??false){
       EmotionRecord record = new EmotionRecord(
           _emotionController.text.split(' ')[1],
           _emotionController.text.split(' ')[0],
           DateTime.now()
       );
+      _dateController.clear();
+      _emotionController.clear();
       widget.addEmotionRecord(record);
       _formKey.currentState!.reset();
     }
@@ -71,8 +73,8 @@ class _EmotionRecordState extends State<EmotionRecordForm>{
                   ),
                   Center(
                     child: DropdownMenu<EmotionMenu>(
-                      initialSelection: EmotionMenu.happy,
-                      requestFocusOnTap: true,
+                      width: 300.0,
+                      requestFocusOnTap: false,
                       label: const Text('Emotion'),
                       controller: _emotionController,
                       dropdownMenuEntries: EmotionMenu.values
