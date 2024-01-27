@@ -26,6 +26,9 @@ class _WorkoutRecordForm extends State<WorkoutRecordForm>{
           double.parse(_durationController.text),
           DateTime.now()
       );
+      _workoutController.clear();
+      _durationController.clear();
+      _dateController.clear();
       widget.addWorkoutRecord(record);
       _formKey.currentState!.reset();
     }
@@ -45,7 +48,8 @@ class _WorkoutRecordForm extends State<WorkoutRecordForm>{
             ),
             Center(
               child: DropdownMenu<String>(
-                requestFocusOnTap: true,
+                width: 300.0,
+                requestFocusOnTap: false,
                 controller: _workoutController,
                 label: const Text('Workout'),
                 dropdownMenuEntries: _workoutList
@@ -60,12 +64,18 @@ class _WorkoutRecordForm extends State<WorkoutRecordForm>{
             ),
             SizedBox(
               width: 400.0,
-              child: TextField(
+              child: TextFormField(
                 decoration: const InputDecoration(
                     labelText: 'Duration(mins)'
                 ),
                 controller: _durationController,
                 keyboardType: TextInputType.number,
+                validator: (newValue) {
+                  if(newValue == null || newValue.isEmpty) {
+                    return 'Duration must not be blank.';
+                  }
+                  return null;
+                },
               )
             ),
             SizedBox(
