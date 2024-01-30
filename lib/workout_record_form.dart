@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'workout_record.dart';
+import 'package:provider/provider.dart';
+import 'package:cpsc5250hw/recording_points.dart';
+import 'package:cpsc5250hw/last_recording_info.dart';
+import 'package:date_field/date_field.dart';
 
 class WorkoutRecordForm extends StatefulWidget {
   final void Function(WorkoutRecord workoutRecord) addWorkoutRecord;
@@ -13,26 +17,36 @@ class _WorkoutRecordForm extends State<WorkoutRecordForm>{
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final List<String> _workoutList = ['Running', 'Swimming', 'Cycling', 'Yoga', 'Strength Training',
     'High-Intensity Interval Training (HIIT)', 'Pilates', 'Boxing'];
-
-  // String? selectedWorkout = 'Running';
   final TextEditingController _workoutController = TextEditingController();
   final TextEditingController _durationController = TextEditingController();
-  final TextEditingController _dateController = TextEditingController();
+  String? _dropdownError;
+  DateTime _dateTime = DateTime.now();
 
   void _onSavePressed(){
     print("Workout: "+ _workoutController.text+ " Quantity: "+_durationController.text);
-    if(_formKey.currentState?.validate()??false){
-      WorkoutRecord record = new WorkoutRecord(_workoutController.text,
-          double.parse(_durationController.text),
-          DateTime.now()
-      );
-      _workoutController.clear();
-      _durationController.clear();
-      _dateController.clear();
-      widget.addWorkoutRecord(record);
-      _formKey.currentState!.reset();
+    if (_workoutController.text == null || _workoutController.text.isEmpty) {
+      _dropdownError = 'Workout must not be blank.';
+      _formKey.currentState?.validate();
+      setState(() {});
+    } else {
+      _dropdownError = null;
+      setState(() {});
+      if(_formKey.currentState?.validate()??false){
+        WorkoutRecord record = new WorkoutRecord(
+            _workoutController.text,
+            double.parse(_durationController.text),
+            _dateTime
+        );
+        context.read<LastRecordingInfo>().setRecordingDate(_dateTime.toString());
+        context.read<LastRecordingInfo>().setRecordingType("Workout Record");
+        context.read<RecordingPoints>().setRecordingPoints(context.read<RecordingPoints>().getRecordingPoints()+5);
+        _dateTime = DateTime.now();
+        _durationController.clear();
+        _workoutController.clear();
+        widget.addWorkoutRecord(record);
+        _formKey.currentState!.reset();
+      }
     }
-
   }
 
   @override
@@ -44,23 +58,23 @@ class _WorkoutRecordForm extends State<WorkoutRecordForm>{
           children:[
             Container(
                 padding: const EdgeInsets.only(top: 20.0, bottom: 10.0),
-                child: Text('Date: ' + DateTime.now().toString().split(' ')[0], style: TextStyle(fontSize: 20))
-            ),
-            Center(
-              child: DropdownMenu<String>(
-                width: 300.0,
-                requestFocusOnTap: false,
-                controller: _workoutController,
-                label: const Text('Workout'),
-                dropdownMenuEntries: _workoutList
-                    .map<DropdownMenuEntry<String>>(
-                        (String workout){
-                      return DropdownMenuEntry<String>(
-                        value: workout,
-                        label: workout,
-                      );
-                    }).toList(),
-              )
+                child: Center(
+                    child: DropdownMenu<String>(
+                      width: 300.0,
+                      requestFocusOnTap: false,
+                      controller: _workoutController,
+                      errorText: _dropdownError,
+                      label: const Text('Workout'),
+                      dropdownMenuEntries: _workoutList
+                          .map<DropdownMenuEntry<String>>(
+                              (String workout){
+                            return DropdownMenuEntry<String>(
+                              value: workout,
+                              label: workout,
+                            );
+                          }).toList(),
+                    )
+                ),
             ),
             SizedBox(
               width: 400.0,
@@ -80,12 +94,24 @@ class _WorkoutRecordForm extends State<WorkoutRecordForm>{
             ),
             SizedBox(
               width: 400.0,
-              child: TextField(
-                decoration: const InputDecoration(
-                  labelText: 'Date'
-                ),
-                keyboardType: TextInputType.datetime,
-                controller: _dateController,
+              child: DateTimeFormField(
+                firstDate: DateTime(DateTime.now().year, DateTime.now().month),
+                lastDate: DateTime.now(),
+                mode: DateTimeFieldPickerMode.date,
+                initialPickerDateTime: DateTime.now(),
+                onChanged: (newDate) {
+                  if(newDate != null) {
+                    setState(() {
+                      _dateTime = newDate;
+                    });
+                  }
+                },
+                validator: (newValue) {
+                  if(newValue == null) {
+                    return 'Date must not be blank.';
+                  }
+                  return null;
+                },
               ),
             ),
             Container(
