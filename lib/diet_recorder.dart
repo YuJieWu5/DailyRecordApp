@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:cpsc5250hw/recording_points.dart';
+import 'package:cpsc5250hw/last_recording_info.dart';
+import 'package:date_field/date_field.dart';
+
 
 class DietRecorder extends StatefulWidget {
   const DietRecorder({super.key});
@@ -10,114 +15,110 @@ class DietRecorder extends StatefulWidget {
 class _DietRecorder extends State<DietRecorder>{
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final List<String> _dietList = [];
-  String? _foodDropdown;
   final TextEditingController _quantityController = TextEditingController();
   final TextEditingController _foodController = TextEditingController();
-  
-  @override
-  void initState(){
-    super.initState();
-    _foodController.addListener(_updateState);
-  }
-
-  @override
-  void dispose(){
-    _foodController.removeListener(_updateState);
-    _foodController.dispose();
-    super.dispose();
-  }
-
-  void _updateState(){
-    setState(() {
-    });
-  }
-
-  _addDirectItem(String item){
-    if(!_dietList.contains(item.toLowerCase()) && !item.isEmpty){
-      setState(() {
-        _dietList.add(item.toLowerCase());
-        _foodDropdown = null;
-        _foodController.clear();
-        _quantityController.clear();
-      });
-    }
-  }
+  DateTime _dateTime = DateTime.now();
+  String? _dropdownError;
 
   void _onSavePressed(){
-    // print("Food: "+ _foodController.text+ " Quantity: "+_quantityController.text);
-    if(_foodController.text.isEmpty){
-      _addDirectItem(_foodDropdown.toString());
-      print(_foodDropdown.toString());
-    }
-    else
-      _addDirectItem(_foodController.text);
+    print("Food: "+ _foodController.text+ " Quantity: "+_quantityController.text);
+    //   _addDirectItem(_foodController.text);
+      if (_foodController.text == null || _foodController.text.isEmpty) {
+        _dropdownError = 'Food must not be blank.';
+        _formKey.currentState?.validate();
+        setState(() {});
+      } else {
+        _dropdownError = null;
+        setState(() {
+          _dietList.add(_foodController.text.toLowerCase());
+        });
+
+        if(_formKey.currentState?.validate()??false){
+          context.read<LastRecordingInfo>().setRecordingDate(_dateTime.toString());
+          context.read<LastRecordingInfo>().setRecordingType("Diet Record");
+          context.read<RecordingPoints>().setRecordingPoints(context.read<RecordingPoints>().getRecordingPoints()+5);
+          _dateTime = DateTime.now();
+          _foodController.clear();
+          _quantityController.clear();
+          _formKey.currentState!.reset();
+        }
+      }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Center(child: const Text("Diet Recorder", style: TextStyle(fontSize: 30),)),
+          backgroundColor: Theme.of(context).primaryColor,
+          title: Center(
+              child: Text('RecordingPoints: ${context.watch<RecordingPoints>().getRecordingPoints()}\t'
+                  'Last Update: ${context.watch<LastRecordingInfo>().getRecordingDate()} ${context.watch<LastRecordingInfo>().getRecordingType()}\n'
+                  'Diet Record Page',style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
+              )
+          ),
         ),
       body: Form(
+        key: _formKey,
         child: SafeArea(
             child: Column(
               children: [
                 Container(
                     padding: const EdgeInsets.only(top: 20.0, bottom: 10.0),
-                    child: Text('Date: ' + DateTime.now().toString().split(' ')[0], style: TextStyle(fontSize: 20))
+                    child: Center(
+                        child: DropdownMenu<String>(
+                          width: 400.0,
+                          controller: _foodController,
+                          requestFocusOnTap: true,
+                          label: const Text('Food'),
+                          errorText: _dropdownError,
+                          hintText: "Please Enter Food or Select from the DropDownMenu",
+                          dropdownMenuEntries: _dietList.map<DropdownMenuEntry<String>>((String food) {
+                            return DropdownMenuEntry<String>(
+                              value: food,
+                              label: food,
+                            );
+                          }).toList(),
+                        )
+                    ),
                 ),
-                Center(
-                  child: _dietList.isNotEmpty
-                      ? DropdownMenu<String>(
-                        enabled: _foodController.text.isEmpty,
-                        requestFocusOnTap: true,
-                        label: const Text('Food'),
-                        onSelected: (newValue) => setState(() {
-                          if(newValue==null || newValue.isEmpty) _foodDropdown = null;
-                          else _foodDropdown = newValue;
-                        }),
-                        dropdownMenuEntries: _dietList.map<DropdownMenuEntry<String>>((String food) {
-                          return DropdownMenuEntry<String>(
-                            value: food,
-                            label: food,
-                          );
-                        }).toList(),
-                      )
-                      : SizedBox.shrink(),
-                ),
-                  SizedBox(
-                    width: 500.0,
+                SizedBox(
+                    width: 400.0,
                     child: TextFormField(
-                      enabled: _foodDropdown==null,
-                      controller: _foodController,
+                      controller: _quantityController,
                       decoration: const InputDecoration(
-                          labelText: 'Food'
+                          labelText: 'Quantity'
                       ),
-                      validator:  (newValue) {
+                      keyboardType: TextInputType.number,
+                      validator: (newValue) {
                         if(newValue == null || newValue.isEmpty) {
                           return 'Quantity must not be blank.';
                         }
                         return null;
                       },
-                    ),
+                    )
+                ),
+                SizedBox(
+                  width: 400.0,
+                  child: DateTimeFormField(
+                    firstDate: DateTime(DateTime.now().year, DateTime.now().month),
+                    lastDate: DateTime.now(),
+                    mode: DateTimeFieldPickerMode.date,
+                    initialPickerDateTime: DateTime.now(),
+                    onChanged: (newDate) {
+                      if(newDate != null) {
+                        setState(() {
+                          _dateTime = newDate;
+                        });
+                      }
+                    },
+                    validator: (newValue) {
+                      if(newValue == null) {
+                        return 'Date must not be blank.';
+                      }
+                      return null;
+                    },
                   ),
-                  SizedBox(
-                      width: 500.0,
-                      child: TextFormField(
-                        controller: _quantityController,
-                        decoration: const InputDecoration(
-                            labelText: 'Quantity'
-                        ),
-                        keyboardType: TextInputType.number,
-                        validator: (newValue) {
-                          if(newValue == null || newValue.isEmpty) {
-                            return 'Quantity must not be blank.';
-                          }
-                          return null;
-                        },
-                      )
-                  ),
+                ),
                 Container(
                   margin: const EdgeInsets.only(top: 20.0),
                   child: ElevatedButton(
