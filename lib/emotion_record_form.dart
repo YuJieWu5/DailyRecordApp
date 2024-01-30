@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'emotion_record.dart';
+import 'package:provider/provider.dart';
+import 'package:date_field/date_field.dart';
+import 'package:cpsc5250hw/recording_points.dart';
+import 'package:cpsc5250hw/last_recording_info.dart';
 
 enum EmotionMenu {
   happy('happy', '😆'),
@@ -43,20 +47,32 @@ class EmotionRecordForm extends StatefulWidget {
 class _EmotionRecordState extends State<EmotionRecordForm>{
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _emotionController = TextEditingController();
-  final TextEditingController _dateController = TextEditingController();
+  DateTime _dateTime = DateTime.now();
+  String? _dropdownError;
 
   void _onSavePressed(){
     print("User selected " + _emotionController.text + " emotion and pressed save!");
-    if(_formKey.currentState?.validate()??false){
-      EmotionRecord record = new EmotionRecord(
-          _emotionController.text.split(' ')[1],
-          _emotionController.text.split(' ')[0],
-          DateTime.now()
-      );
-      _dateController.clear();
-      _emotionController.clear();
-      widget.addEmotionRecord(record);
-      _formKey.currentState!.reset();
+    if(_emotionController.text == null || _emotionController.text.isEmpty){
+      _dropdownError = 'Emotion must not be blank.';
+      _formKey.currentState?.validate();
+      setState(() {});
+    } else{
+      _dropdownError = null;
+      setState(() {});
+      if(_formKey.currentState?.validate()??false){
+        EmotionRecord record = new EmotionRecord(
+            _emotionController.text.split(' ')[1],
+            _emotionController.text.split(' ')[0],
+            _dateTime
+        );
+        context.read<LastRecordingInfo>().setRecordingDate(_dateTime.toString());
+        context.read<LastRecordingInfo>().setRecordingType("Emotion Record");
+        context.read<RecordingPoints>().setRecordingPoints(context.read<RecordingPoints>().getRecordingPoints()+1);
+        // _dateController.clear();
+        _emotionController.clear();
+        widget.addEmotionRecord(record);
+        _formKey.currentState!.reset();
+      }
     }
   }
 
@@ -69,33 +85,45 @@ class _EmotionRecordState extends State<EmotionRecordForm>{
                 children: [
                   Container(
                     padding: const EdgeInsets.only(top: 20.0, bottom: 10.0),
-                    child: Text('Date: ' + DateTime.now().toString().split(' ')[0], style: TextStyle(fontSize: 20))
-                  ),
-                  Center(
-                    child: DropdownMenu<EmotionMenu>(
-                      width: 300.0,
-                      requestFocusOnTap: false,
-                      label: const Text('Emotion'),
-                      controller: _emotionController,
-                      dropdownMenuEntries: EmotionMenu.values
-                          .map<DropdownMenuEntry<EmotionMenu>>(
-                              (EmotionMenu emotion){
-                            return DropdownMenuEntry<EmotionMenu>(
-                              value: emotion,
-                              label: emotion.key+" "+emotion.value,
-                            );
-                          }).toList(),
+                    child: Center(
+                      child: DropdownMenu<EmotionMenu>(
+                        width: 300.0,
+                        requestFocusOnTap: false,
+                        errorText: _dropdownError,
+                        label: const Text('Emotion'),
+                        controller: _emotionController,
+                        dropdownMenuEntries: EmotionMenu.values
+                            .map<DropdownMenuEntry<EmotionMenu>>(
+                                (EmotionMenu emotion){
+                              return DropdownMenuEntry<EmotionMenu>(
+                                value: emotion,
+                                label: emotion.key+" "+emotion.value,
+                              );
+                            }).toList(),
+                      ),
                     ),
                   ),
                   SizedBox(
                     width: 400.0,
-                    child: TextField(
-                      decoration: const InputDecoration(
-                          labelText: 'Date'
-                      ),
-                      keyboardType: TextInputType.datetime,
-                      controller: _dateController,
-                    )
+                    child: DateTimeFormField(
+                      firstDate: DateTime(DateTime.now().year, DateTime.now().month),
+                      lastDate: DateTime.now(),
+                      mode: DateTimeFieldPickerMode.date,
+                      initialPickerDateTime: DateTime.now(),
+                      onChanged: (newDate) {
+                        if(newDate != null) {
+                          setState(() {
+                            _dateTime = newDate;
+                          });
+                        }
+                      },
+                      validator: (newValue) {
+                        if(newValue == null) {
+                          return 'Date must not be blank.';
+                        }
+                        return null;
+                      },
+                    ),
                   ),
                   Container(
                     margin: const EdgeInsets.only(top: 20.0),
