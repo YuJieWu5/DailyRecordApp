@@ -87,7 +87,7 @@ class _EmotionRecordState extends State<EmotionRecordForm>{
                     padding: const EdgeInsets.only(top: 20.0, bottom: 10.0),
                     child: Center(
                       child: DropdownMenu<EmotionMenu>(
-                        width: 300.0,
+                        width: 400.0,
                         requestFocusOnTap: false,
                         errorText: _dropdownError,
                         label: const Text('Emotion'),

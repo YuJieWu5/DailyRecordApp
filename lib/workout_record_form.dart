@@ -60,7 +60,7 @@ class _WorkoutRecordForm extends State<WorkoutRecordForm>{
                 padding: const EdgeInsets.only(top: 20.0, bottom: 10.0),
                 child: Center(
                     child: DropdownMenu<String>(
-                      width: 300.0,
+                      width: 400.0,
                       requestFocusOnTap: false,
                       controller: _workoutController,
                       errorText: _dropdownError,
