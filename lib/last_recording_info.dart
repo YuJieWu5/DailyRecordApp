@@ -1,19 +1,19 @@
 import 'package:flutter/foundation.dart';
 
-class LastRecordingDate with ChangeNotifier{
-  DateTime _lastDate;
-  String _recordingType
+class LastRecordingInfo with ChangeNotifier{
+  String _lastDate;
+  String _recordingType;
 
-  LastRecordingDate(this._lastDate, this._recordingType);
+  LastRecordingInfo(this._lastDate, this._recordingType);
 
-  getRecordingDate(){retrun _lastDate;}
+  getRecordingDate(){ return _lastDate; }
 
-  setRecordingDate(DateTime newDate){
+  setRecordingDate(String newDate){
     _lastDate = newDate;
     notifyListeners();
   }
 
-  getRecordingType(){return _recordingType};
+  getRecordingType(){ return _recordingType; }
 
   setRecordingType(String newType){
     _recordingType = newType;
