@@ -87,12 +87,15 @@ class _EmotionRecordState extends State<EmotionRecordForm>{
                           }).toList(),
                     ),
                   ),
-                  TextField(
-                    decoration: const InputDecoration(
-                        labelText: 'Date'
-                    ),
-                    keyboardType: TextInputType.datetime,
-                    controller: _dateController,
+                  SizedBox(
+                    width: 400.0,
+                    child: TextField(
+                      decoration: const InputDecoration(
+                          labelText: 'Date'
+                      ),
+                      keyboardType: TextInputType.datetime,
+                      controller: _dateController,
+                    )
                   ),
                   Container(
                     margin: const EdgeInsets.only(top: 20.0),
