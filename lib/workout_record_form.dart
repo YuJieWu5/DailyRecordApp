@@ -30,7 +30,6 @@ class _WorkoutRecordForm extends State<WorkoutRecordForm>{
       setState(() {});
     } else {
       _dropdownError = null;
-      setState(() {});
       if(_formKey.currentState?.validate()??false){
         WorkoutRecord record = new WorkoutRecord(
             _workoutController.text,
@@ -40,12 +39,14 @@ class _WorkoutRecordForm extends State<WorkoutRecordForm>{
         context.read<LastRecordingInfo>().setRecordingDate(_dateTime.toString());
         context.read<LastRecordingInfo>().setRecordingType("Workout Record");
         context.read<RecordingPoints>().setRecordingPoints(context.read<RecordingPoints>().getRecordingPoints()+5);
-        _dateTime = DateTime.now();
-        _durationController.clear();
-        _workoutController.clear();
         widget.addWorkoutRecord(record);
         _formKey.currentState!.reset();
       }
+      setState(() {
+        _dateTime = DateTime.now();
+        _durationController.clear();
+        _workoutController.clear();
+      });
     }
   }
 
