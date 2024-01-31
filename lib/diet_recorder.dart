@@ -12,8 +12,10 @@ class DietRecorder extends StatefulWidget {
   State<DietRecorder> createState() => _DietRecorder();
 }
 
+@visibleForTesting
 class _DietRecorder extends State<DietRecorder>{
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  @visibleForTesting
   final List<String> _dietList = [];
   final TextEditingController _quantityController = TextEditingController();
   final TextEditingController _foodController = TextEditingController();
@@ -29,19 +31,20 @@ class _DietRecorder extends State<DietRecorder>{
         setState(() {});
       } else {
         _dropdownError = null;
-        setState(() {
-          _dietList.add(_foodController.text.toLowerCase());
-        });
-
         if(_formKey.currentState?.validate()??false){
           context.read<LastRecordingInfo>().setRecordingDate(_dateTime.toString());
           context.read<LastRecordingInfo>().setRecordingType("Diet Record");
           context.read<RecordingPoints>().setRecordingPoints(context.read<RecordingPoints>().getRecordingPoints()+5);
+          _formKey.currentState!.reset();
+        }
+
+        setState(() {
+          if(!_dietList.contains(_foodController.text.toLowerCase()))
+            _dietList.add(_foodController.text.toLowerCase());
           _dateTime = DateTime.now();
           _foodController.clear();
           _quantityController.clear();
-          _formKey.currentState!.reset();
-        }
+        });
       }
   }
 
@@ -57,78 +60,80 @@ class _DietRecorder extends State<DietRecorder>{
               )
           ),
         ),
-      body: Form(
-        key: _formKey,
-        child: SafeArea(
-            child: Column(
-              children: [
-                Container(
-                    padding: const EdgeInsets.only(top: 20.0, bottom: 10.0),
-                    child: Center(
-                        child: DropdownMenu<String>(
-                          width: 400.0,
-                          controller: _foodController,
-                          requestFocusOnTap: true,
-                          label: const Text('Food'),
-                          errorText: _dropdownError,
-                          hintText: "Please Enter Food or Select from the DropDownMenu",
-                          dropdownMenuEntries: _dietList.map<DropdownMenuEntry<String>>((String food) {
-                            return DropdownMenuEntry<String>(
-                              value: food,
-                              label: food,
-                            );
-                          }).toList(),
+      body: SingleChildScrollView(
+        child: Form(
+            key: _formKey,
+            child: SafeArea(
+                child: Column(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.only(top: 20.0, bottom: 10.0),
+                      child: Center(
+                          child: DropdownMenu<String>(
+                            width: 400.0,
+                            controller: _foodController,
+                            requestFocusOnTap: true,
+                            label: const Text('Food'),
+                            errorText: _dropdownError,
+                            hintText: "Please Enter Food or Select from the DropDownMenu",
+                            dropdownMenuEntries: _dietList.map<DropdownMenuEntry<String>>((String food) {
+                              return DropdownMenuEntry<String>(
+                                value: food,
+                                label: food,
+                              );
+                            }).toList(),
+                          )
+                      ),
+                    ),
+                    SizedBox(
+                        width: 400.0,
+                        child: TextFormField(
+                          controller: _quantityController,
+                          decoration: const InputDecoration(
+                              labelText: 'Quantity'
+                          ),
+                          keyboardType: TextInputType.number,
+                          validator: (newValue) {
+                            if(newValue == null || newValue.isEmpty) {
+                              return 'Quantity must not be blank.';
+                            }
+                            return null;
+                          },
                         )
                     ),
-                ),
-                SizedBox(
-                    width: 400.0,
-                    child: TextFormField(
-                      controller: _quantityController,
-                      decoration: const InputDecoration(
-                          labelText: 'Quantity'
+                    SizedBox(
+                      width: 400.0,
+                      child: DateTimeFormField(
+                        firstDate: DateTime(DateTime.now().year, DateTime.now().month),
+                        lastDate: DateTime.now(),
+                        mode: DateTimeFieldPickerMode.date,
+                        initialPickerDateTime: DateTime.now(),
+                        onChanged: (newDate) {
+                          if(newDate != null) {
+                            setState(() {
+                              _dateTime = newDate;
+                            });
+                          }
+                        },
+                        validator: (newValue) {
+                          if(newValue == null) {
+                            return 'Date must not be blank.';
+                          }
+                          return null;
+                        },
                       ),
-                      keyboardType: TextInputType.number,
-                      validator: (newValue) {
-                        if(newValue == null || newValue.isEmpty) {
-                          return 'Quantity must not be blank.';
-                        }
-                        return null;
-                      },
+                    ),
+                    Container(
+                      margin: const EdgeInsets.only(top: 20.0),
+                      child: ElevatedButton(
+                          onPressed: _onSavePressed,
+                          child: const Text('Save')
+                      ),
                     )
-                ),
-                SizedBox(
-                  width: 400.0,
-                  child: DateTimeFormField(
-                    firstDate: DateTime(DateTime.now().year, DateTime.now().month),
-                    lastDate: DateTime.now(),
-                    mode: DateTimeFieldPickerMode.date,
-                    initialPickerDateTime: DateTime.now(),
-                    onChanged: (newDate) {
-                      if(newDate != null) {
-                        setState(() {
-                          _dateTime = newDate;
-                        });
-                      }
-                    },
-                    validator: (newValue) {
-                      if(newValue == null) {
-                        return 'Date must not be blank.';
-                      }
-                      return null;
-                    },
-                  ),
-                ),
-                Container(
-                  margin: const EdgeInsets.only(top: 20.0),
-                  child: ElevatedButton(
-                      onPressed: _onSavePressed,
-                      child: const Text('Save')
-                  ),
+                  ],
                 )
-              ],
-            )
-        ),
+            ),
+        )
       )
     );
   }
