@@ -11,7 +11,7 @@ class WorkoutRecordsViewModel with ChangeNotifier{
     notifyListeners();
   }
 
-  Future<List<WorkoutRecord>> listAllEmotionRecords(){
+  Future<List<WorkoutRecord>> listAllWorkoutRecords(){
     return _repository.listAllWorkoutRecords();
   }
 
