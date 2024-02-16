@@ -13,7 +13,7 @@ class FloorWorkoutRecordsRepository implements WorkoutRecordsRepository{
   @override
   Future<void> addWorkoutRecord(WorkoutRecord record) async{
     WorkoutRecordEntity entity = WorkoutRecordEntity(
-        uuid.v4(),
+        record.id,
         record.workout,
         record.duration,
         record.date.millisecondsSinceEpoch
@@ -33,6 +33,7 @@ class FloorWorkoutRecordsRepository implements WorkoutRecordsRepository{
   }
 
   WorkoutRecord _covertFromDatabase(WorkoutRecordEntity entity) => WorkoutRecord(
+      entity.id,
       entity.workout,
       entity.duration,
       DateTime.fromMillisecondsSinceEpoch(entity.date)

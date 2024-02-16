@@ -63,6 +63,10 @@ class _$RecorderDatabase extends RecorderDatabase {
 
   WorkoutRecordDao? _workoutRecordDaoInstance;
 
+  EmotionRecordDao? _emotionRecordDaoInstance;
+
+  DietRecordDao? _dietRecordDaoInstance;
+
   Future<sqflite.Database> open(
     String path,
     List<Migration> migrations, [
@@ -86,6 +90,10 @@ class _$RecorderDatabase extends RecorderDatabase {
       onCreate: (database, version) async {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `WorkoutRecord` (`id` TEXT NOT NULL, `workout` TEXT NOT NULL, `duration` REAL NOT NULL, `date` INTEGER NOT NULL, PRIMARY KEY (`id`))');
+        await database.execute(
+            'CREATE TABLE IF NOT EXISTS `EmotionRecord` (`id` TEXT NOT NULL, `icon` TEXT NOT NULL, `emotion` TEXT NOT NULL, `date` INTEGER NOT NULL, PRIMARY KEY (`id`))');
+        await database.execute(
+            'CREATE TABLE IF NOT EXISTS `DietRecord` (`id` TEXT NOT NULL, `food` TEXT NOT NULL, `quantity` REAL NOT NULL, `date` INTEGER NOT NULL, PRIMARY KEY (`id`))');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -97,6 +105,17 @@ class _$RecorderDatabase extends RecorderDatabase {
   WorkoutRecordDao get workoutRecordDao {
     return _workoutRecordDaoInstance ??=
         _$WorkoutRecordDao(database, changeListener);
+  }
+
+  @override
+  EmotionRecordDao get emotionRecordDao {
+    return _emotionRecordDaoInstance ??=
+        _$EmotionRecordDao(database, changeListener);
+  }
+
+  @override
+  DietRecordDao get dietRecordDao {
+    return _dietRecordDaoInstance ??= _$DietRecordDao(database, changeListener);
   }
 }
 
@@ -126,7 +145,7 @@ class _$WorkoutRecordDao extends WorkoutRecordDao {
 
   @override
   Future<List<WorkoutRecordEntity>> listAllWorkoutRecord() async {
-    return _queryAdapter.queryList('SELECT * FROM SpendingEvent',
+    return _queryAdapter.queryList('SELECT * FROM WorkoutRecord',
         mapper: (Map<String, Object?> row) => WorkoutRecordEntity(
             row['id'] as String,
             row['workout'] as String,
@@ -136,13 +155,116 @@ class _$WorkoutRecordDao extends WorkoutRecordDao {
 
   @override
   Future<void> deleteWorkoutRecord(String id) async {
-    await _queryAdapter
-        .queryNoReturn('DELETE FROM items WHERE id = ?1', arguments: [id]);
+    await _queryAdapter.queryNoReturn('DELETE FROM WorkoutRecord WHERE id = ?1',
+        arguments: [id]);
   }
 
   @override
   Future<void> addWorkoutRecord(WorkoutRecordEntity record) async {
     await _workoutRecordEntityInsertionAdapter.insert(
+        record, OnConflictStrategy.abort);
+  }
+}
+
+class _$EmotionRecordDao extends EmotionRecordDao {
+  _$EmotionRecordDao(
+    this.database,
+    this.changeListener,
+  )   : _queryAdapter = QueryAdapter(database),
+        _emotionRecordEntityInsertionAdapter = InsertionAdapter(
+            database,
+            'EmotionRecord',
+            (EmotionRecordEntity item) => <String, Object?>{
+                  'id': item.id,
+                  'icon': item.icon,
+                  'emotion': item.emotion,
+                  'date': item.date
+                });
+
+  final sqflite.DatabaseExecutor database;
+
+  final StreamController<String> changeListener;
+
+  final QueryAdapter _queryAdapter;
+
+  final InsertionAdapter<EmotionRecordEntity>
+      _emotionRecordEntityInsertionAdapter;
+
+  @override
+  Future<List<EmotionRecordEntity>> listAllEmotionRecord() async {
+    return _queryAdapter.queryList('SELECT * FROM EmotionRecord',
+        mapper: (Map<String, Object?> row) => EmotionRecordEntity(
+            row['id'] as String,
+            row['icon'] as String,
+            row['emotion'] as String,
+            row['date'] as int));
+  }
+
+  @override
+  Future<void> deleteEmotionRecord(String id) async {
+    await _queryAdapter.queryNoReturn('DELETE FROM EmotionRecord WHERE id = ?1',
+        arguments: [id]);
+  }
+
+  @override
+  Future<void> addEmotionRecord(EmotionRecordEntity record) async {
+    await _emotionRecordEntityInsertionAdapter.insert(
+        record, OnConflictStrategy.abort);
+  }
+}
+
+class _$DietRecordDao extends DietRecordDao {
+  _$DietRecordDao(
+    this.database,
+    this.changeListener,
+  )   : _queryAdapter = QueryAdapter(database),
+        _dietRecordEntityInsertionAdapter = InsertionAdapter(
+            database,
+            'DietRecord',
+            (DietRecordEntity item) => <String, Object?>{
+                  'id': item.id,
+                  'food': item.food,
+                  'quantity': item.quantity,
+                  'date': item.date
+                });
+
+  final sqflite.DatabaseExecutor database;
+
+  final StreamController<String> changeListener;
+
+  final QueryAdapter _queryAdapter;
+
+  final InsertionAdapter<DietRecordEntity> _dietRecordEntityInsertionAdapter;
+
+  @override
+  Future<List<DietRecordEntity>> listAllDietRecord() async {
+    return _queryAdapter.queryList('SELECT * FROM DietRecord',
+        mapper: (Map<String, Object?> row) => DietRecordEntity(
+            row['id'] as String,
+            row['food'] as String,
+            row['quantity'] as double,
+            row['date'] as int));
+  }
+
+  @override
+  Future<void> deleteDietRecord(String id) async {
+    await _queryAdapter
+        .queryNoReturn('DELETE FROM DietRecord WHERE id = ?1', arguments: [id]);
+  }
+
+  @override
+  Future<void> updateDietRecord(
+    String id,
+    double quantity,
+  ) async {
+    await _queryAdapter.queryNoReturn(
+        'UPDATE DietRecord SET quantity = ?2 WHERE id = ?1',
+        arguments: [id, quantity]);
+  }
+
+  @override
+  Future<void> addDietRecord(DietRecordEntity record) async {
+    await _dietRecordEntityInsertionAdapter.insert(
         record, OnConflictStrategy.abort);
   }
 }

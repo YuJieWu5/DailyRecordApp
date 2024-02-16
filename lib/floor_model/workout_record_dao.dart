@@ -5,8 +5,8 @@ import 'workout_record_entity.dart';
 abstract class WorkoutRecordDao{
   @insert
   Future<void> addWorkoutRecord(WorkoutRecordEntity record);
-  @Query('SELECT * FROM SpendingEvent')
+  @Query('SELECT * FROM WorkoutRecord')
   Future<List<WorkoutRecordEntity>> listAllWorkoutRecord();
-  @Query('DELETE FROM items WHERE id = :id')
+  @Query('DELETE FROM WorkoutRecord WHERE id = :id')
   Future<void> deleteWorkoutRecord(String id);
 }
