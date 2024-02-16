@@ -16,12 +16,12 @@ class DietRecordsViewModel with ChangeNotifier{
     return _repository.listAllDietRecords();
   }
 
-  deleteDietRecord(int id) async{
+  deleteDietRecord(String id) async{
     await _repository.deleteDietRecord(id);
     notifyListeners();
   }
 
-  updateDietRecord(int id, double quantity) async{
+  updateDietRecord(String id, double quantity) async{
     await _repository.updateDietRecord(id, quantity);
     notifyListeners();
   }

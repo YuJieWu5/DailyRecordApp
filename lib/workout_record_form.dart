@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
+import 'last_record.dart';
+import 'last_record_view_model.dart';
 import 'workout_record.dart';
 import 'package:provider/provider.dart';
 import 'package:cpsc5250hw/recording_points.dart';
 import 'package:cpsc5250hw/last_recording_info.dart';
+import 'package:cpsc5250hw/workout_records_view_model.dart';
 import 'package:date_field/date_field.dart';
+import 'package:uuid/uuid.dart';
 
 class WorkoutRecordForm extends StatefulWidget {
-  final void Function(WorkoutRecord workoutRecord) addWorkoutRecord;
-  const WorkoutRecordForm(this.addWorkoutRecord, {super.key});
+  // final void Function(WorkoutRecord workoutRecord) addWorkoutRecord;
+  // const WorkoutRecordForm(this.addWorkoutRecord, {super.key});
+  const WorkoutRecordForm({super.key});
 
   @override
   State<WorkoutRecordForm> createState() => _WorkoutRecordForm();
@@ -21,6 +26,7 @@ class _WorkoutRecordForm extends State<WorkoutRecordForm>{
   final TextEditingController _durationController = TextEditingController();
   String? _dropdownError;
   DateTime _dateTime = DateTime.now();
+  var uuid = Uuid();
 
   void _onSavePressed(){
     print("Workout: "+ _workoutController.text+ " Quantity: "+_durationController.text);
@@ -31,15 +37,15 @@ class _WorkoutRecordForm extends State<WorkoutRecordForm>{
     } else {
       _dropdownError = null;
       if(_formKey.currentState?.validate()??false){
-        WorkoutRecord record = new WorkoutRecord(
+        WorkoutRecord record = WorkoutRecord(
+            uuid.v4(),
             _workoutController.text,
             double.parse(_durationController.text),
             _dateTime
         );
-        context.read<LastRecordingInfo>().setRecordingDate(_dateTime.toString());
-        context.read<LastRecordingInfo>().setRecordingType("Workout Record");
-        context.read<RecordingPoints>().setRecordingPoints(context.read<RecordingPoints>().getRecordingPoints()+5);
-        widget.addWorkoutRecord(record);
+        LastRecord lastRecord = LastRecord("Workout Record", DateTime.now(),3);
+        context.read<WorkoutRecordsViewModel>().addWorkoutRecord(record);
+        context.read<LastRecordViewModel>().addLastRecord(lastRecord);
         _formKey.currentState!.reset();
       }
       setState(() {

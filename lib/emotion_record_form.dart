@@ -1,9 +1,13 @@
+import 'package:cpsc5250hw/last_record.dart';
+import 'package:cpsc5250hw/last_record_view_model.dart';
 import 'package:flutter/material.dart';
 import 'emotion_record.dart';
 import 'package:provider/provider.dart';
 import 'package:date_field/date_field.dart';
 import 'package:cpsc5250hw/recording_points.dart';
 import 'package:cpsc5250hw/last_recording_info.dart';
+import 'package:cpsc5250hw/emotion_records_view_model.dart';
+import 'package:uuid/uuid.dart';
 
 enum EmotionMenu {
   happy('happy', '😆'),
@@ -37,8 +41,7 @@ enum EmotionMenu {
 }
 
 class EmotionRecordForm extends StatefulWidget {
-  final void Function(EmotionRecord record) addEmotionRecord;
-  const EmotionRecordForm(this.addEmotionRecord, {super.key});
+  const EmotionRecordForm({super.key});
 
   @override
   createState() => _EmotionRecordState();
@@ -49,6 +52,7 @@ class _EmotionRecordState extends State<EmotionRecordForm>{
   final TextEditingController _emotionController = TextEditingController();
   DateTime _dateTime = DateTime.now();
   String? _dropdownError;
+  var uuid = Uuid();
 
   void _onSavePressed(){
     print("User selected " + _emotionController.text + " emotion and pressed save!");
@@ -60,17 +64,19 @@ class _EmotionRecordState extends State<EmotionRecordForm>{
       _dropdownError = null;
       setState(() {});
       if(_formKey.currentState?.validate()??false){
-        EmotionRecord record = new EmotionRecord(
+        EmotionRecord record = EmotionRecord(
+            uuid.v4(),
             _emotionController.text.split(' ')[1],
             _emotionController.text.split(' ')[0],
             _dateTime
         );
-        context.read<LastRecordingInfo>().setRecordingDate(_dateTime.toString());
-        context.read<LastRecordingInfo>().setRecordingType("Emotion Record");
-        context.read<RecordingPoints>().setRecordingPoints(context.read<RecordingPoints>().getRecordingPoints()+1);
-        // _dateController.clear();
+        LastRecord lastRecord = LastRecord("Emotion Record", DateTime.now(),1);
+        context.read<EmotionRecordsViewModel>().addEmotionRecord(record);
+        // context.read<LastRecordingInfo>().setRecordingDate(_dateTime.toString());
+        // context.read<LastRecordingInfo>().setRecordingType("Emotion Record");
+        context.read<LastRecordViewModel>().addLastRecord(lastRecord);
+        // context.read<RecordingPoints>().setRecordingPoints();
         _emotionController.clear();
-        widget.addEmotionRecord(record);
         _formKey.currentState!.reset();
       }
     }

@@ -8,12 +8,15 @@ import 'emotion_record_entity.dart';
 import 'emotion_record_dao.dart';
 import 'diet_record_entity.dart';
 import 'diet_record_dao.dart';
+import 'last_record_entity.dart';
+import 'last_record_dao.dart';
 
 part 'recorder_database.g.dart';
 
-@Database(version: 1, entities:[WorkoutRecordEntity,EmotionRecordEntity,DietRecordEntity])
+@Database(version: 1, entities:[WorkoutRecordEntity,EmotionRecordEntity,DietRecordEntity, LastRecordEntity])
 abstract class RecorderDatabase extends FloorDatabase {
   WorkoutRecordDao get workoutRecordDao;
   EmotionRecordDao get emotionRecordDao;
   DietRecordDao get dietRecordDao;
+  LastRecordDao get lastRecordDao;
 }

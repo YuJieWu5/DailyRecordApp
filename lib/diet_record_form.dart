@@ -1,26 +1,29 @@
+import 'package:cpsc5250hw/diet_record.dart';
+import 'package:cpsc5250hw/diet_records_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:cpsc5250hw/recording_points.dart';
-import 'package:cpsc5250hw/last_recording_info.dart';
 import 'package:date_field/date_field.dart';
+import 'package:uuid/uuid.dart';
+
+import 'last_record.dart';
+import 'last_record_view_model.dart';
 
 
-class DietRecorder extends StatefulWidget {
-  const DietRecorder({super.key});
+class DietRecordForm extends StatefulWidget {
+  const DietRecordForm({super.key});
 
   @override
-  State<DietRecorder> createState() => _DietRecorder();
+  State<DietRecordForm> createState() => _DietRecordForm();
 }
 
-@visibleForTesting
-class _DietRecorder extends State<DietRecorder>{
+class _DietRecordForm extends State<DietRecordForm>{
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  @visibleForTesting
   final List<String> _dietList = [];
   final TextEditingController _quantityController = TextEditingController();
   final TextEditingController _foodController = TextEditingController();
   DateTime _dateTime = DateTime.now();
   String? _dropdownError;
+  var uuid = Uuid();
 
   void _onSavePressed(){
     print("Food: "+ _foodController.text+ " Quantity: "+_quantityController.text);
@@ -32,9 +35,19 @@ class _DietRecorder extends State<DietRecorder>{
       } else {
         _dropdownError = null;
         if(_formKey.currentState?.validate()??false){
-          context.read<LastRecordingInfo>().setRecordingDate(_dateTime.toString());
-          context.read<LastRecordingInfo>().setRecordingType("Diet Record");
-          context.read<RecordingPoints>().setRecordingPoints(context.read<RecordingPoints>().getRecordingPoints()+5);
+          DietRecord record = DietRecord(
+              uuid.v4(),
+              _foodController.text,
+              double.parse(_quantityController.text),
+              _dateTime
+          );
+          LastRecord lastRecord = LastRecord("Diet Record", DateTime.now(),5);
+          context.read<DietRecordsViewModel>().addDietRecord(record);
+          context.read<LastRecordViewModel>().addLastRecord(lastRecord);
+          // context.read<LastRecordingInfo>().setRecordingDate(_dateTime.toString());
+          // context.read<LastRecordingInfo>().setRecordingType("Diet Record");
+          // context.read<RecordingPoints>().setRecordingPoints();
+
           _formKey.currentState!.reset();
         }
 
@@ -50,18 +63,7 @@ class _DietRecorder extends State<DietRecorder>{
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Theme.of(context).primaryColor,
-          title: Center(
-              child: Text('RecordingPoints: ${context.watch<RecordingPoints>().getRecordingPoints()}\t'
-                  'Last Update: ${context.watch<LastRecordingInfo>().getRecordingDate()} ${context.watch<LastRecordingInfo>().getRecordingType()}\n'
-                  'Diet Record Page',style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
-              )
-          ),
-        ),
-      body: SingleChildScrollView(
-        child: Form(
+    return Form(
             key: _formKey,
             child: SafeArea(
                 child: Column(
@@ -133,8 +135,6 @@ class _DietRecorder extends State<DietRecorder>{
                   ],
                 )
             ),
-        )
-      )
     );
   }
 }

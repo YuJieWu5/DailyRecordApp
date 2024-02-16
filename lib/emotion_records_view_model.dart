@@ -16,7 +16,7 @@ class EmotionRecordsViewModel with ChangeNotifier{
     return _repository.listAllEmotionRecords();
   }
 
-  deleteEmotionRecord(int id) async{
+  deleteEmotionRecord(String id) async{
     await _repository.deleteEmotionRecord(id);
     notifyListeners();
   }

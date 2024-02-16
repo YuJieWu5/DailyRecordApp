@@ -9,8 +9,8 @@ class RecordingPoints with ChangeNotifier{
     return _points;
   }
 
-  void setRecordingPoints(int newValue){
-    _points = newValue;
+  void setRecordingPoints(){
+    _points = _points+5;
     notifyListeners();
   }
 }

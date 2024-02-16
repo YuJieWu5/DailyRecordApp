@@ -15,7 +15,7 @@ class WorkoutRecordsViewModel with ChangeNotifier{
     return _repository.listAllWorkoutRecords();
   }
 
-  deleteWorkoutRecord(int id) async{
+  deleteWorkoutRecord(String id) async{
     await _repository.deleteWorkoutRecord(id);
     notifyListeners();
   }

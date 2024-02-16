@@ -67,6 +67,8 @@ class _$RecorderDatabase extends RecorderDatabase {
 
   DietRecordDao? _dietRecordDaoInstance;
 
+  LastRecordDao? _lastRecordDaoInstance;
+
   Future<sqflite.Database> open(
     String path,
     List<Migration> migrations, [
@@ -94,6 +96,8 @@ class _$RecorderDatabase extends RecorderDatabase {
             'CREATE TABLE IF NOT EXISTS `EmotionRecord` (`id` TEXT NOT NULL, `icon` TEXT NOT NULL, `emotion` TEXT NOT NULL, `date` INTEGER NOT NULL, PRIMARY KEY (`id`))');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `DietRecord` (`id` TEXT NOT NULL, `food` TEXT NOT NULL, `quantity` REAL NOT NULL, `date` INTEGER NOT NULL, PRIMARY KEY (`id`))');
+        await database.execute(
+            'CREATE TABLE IF NOT EXISTS `LastRecord` (`id` TEXT, `type` TEXT NOT NULL, `date` INTEGER NOT NULL, `points` INTEGER NOT NULL, PRIMARY KEY (`id`))');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -116,6 +120,11 @@ class _$RecorderDatabase extends RecorderDatabase {
   @override
   DietRecordDao get dietRecordDao {
     return _dietRecordDaoInstance ??= _$DietRecordDao(database, changeListener);
+  }
+
+  @override
+  LastRecordDao get lastRecordDao {
+    return _lastRecordDaoInstance ??= _$LastRecordDao(database, changeListener);
   }
 }
 
@@ -265,6 +274,54 @@ class _$DietRecordDao extends DietRecordDao {
   @override
   Future<void> addDietRecord(DietRecordEntity record) async {
     await _dietRecordEntityInsertionAdapter.insert(
+        record, OnConflictStrategy.abort);
+  }
+}
+
+class _$LastRecordDao extends LastRecordDao {
+  _$LastRecordDao(
+    this.database,
+    this.changeListener,
+  )   : _queryAdapter = QueryAdapter(database),
+        _lastRecordEntityInsertionAdapter = InsertionAdapter(
+            database,
+            'LastRecord',
+            (LastRecordEntity item) => <String, Object?>{
+                  'id': item.id,
+                  'type': item.type,
+                  'date': item.date,
+                  'points': item.points
+                });
+
+  final sqflite.DatabaseExecutor database;
+
+  final StreamController<String> changeListener;
+
+  final QueryAdapter _queryAdapter;
+
+  final InsertionAdapter<LastRecordEntity> _lastRecordEntityInsertionAdapter;
+
+  @override
+  Future<LastRecordEntity?> getLastRecord() async {
+    return _queryAdapter.query(
+        'SELECT * FROM LastRecord ORDER BY date DESC LIMIT 1',
+        mapper: (Map<String, Object?> row) => LastRecordEntity(
+            row['id'] as String?,
+            row['type'] as String,
+            row['date'] as int,
+            row['points'] as int));
+  }
+
+  @override
+  Future<int?> getLastPoints() async {
+    return _queryAdapter.query(
+        'SELECT points FROM LastRecord ORDER BY date DESC LIMIT 1',
+        mapper: (Map<String, Object?> row) => row.values.first as int);
+  }
+
+  @override
+  Future<void> addLastRecord(LastRecordEntity record) async {
+    await _lastRecordEntityInsertionAdapter.insert(
         record, OnConflictStrategy.abort);
   }
 }
