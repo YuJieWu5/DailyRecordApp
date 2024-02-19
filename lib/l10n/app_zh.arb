@@ -1,0 +1,25 @@
+{
+  "points": "分數:",
+  "lastUpdate": "最後更新:",
+  "emotionRecordPage": "心情紀錄",
+  "workRecordPage": "運動紀錄",
+  "dietRecordPage": "飲食紀錄",
+  "duration": "時間(分鐘)",
+  "food": "食物",
+  "quantity": "數量",
+  "save": "儲存",
+  "emotion": "心情",
+  "workout": "運動",
+  "emotionList": "{emotion, select, happy {開心} joyful {快樂} good {不錯} love {愛} grateful {感激} excited {興奮} anxious {焦慮} confident {自信} surprised {驚訝} amused {高興} bored {無聊} curious {好奇} disgusted {厭惡} frustrated {挫折} envious {羨慕} inquisitive {好問} tense {緊張} lonely {孤獨} angry {生氣} sad {悲傷} fear {恐懼} weary {疲倦} expressionless {無表情} sick {生病} other{}}",
+  "@emotionList":{
+    "placeholders": {
+      "emotion": {}
+    }
+  },
+  "workoutList": "{workout, select, Running{跑步} Swimming {游泳} Cycling {腳踏車} Yoga {瑜珈} StrengthTraining {重量訓練} HIIT {高強度間歇訓練} Pilates {皮拉提斯} Boxing {拳擊} other {}}",
+  "@workoutList": {
+    "placeholders": {
+      "workout": {}
+    }
+  }
+}

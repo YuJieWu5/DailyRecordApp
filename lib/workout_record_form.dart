@@ -3,15 +3,12 @@ import 'last_record.dart';
 import 'last_record_view_model.dart';
 import 'workout_record.dart';
 import 'package:provider/provider.dart';
-import 'package:cpsc5250hw/recording_points.dart';
-import 'package:cpsc5250hw/last_recording_info.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:cpsc5250hw/workout_records_view_model.dart';
 import 'package:date_field/date_field.dart';
 import 'package:uuid/uuid.dart';
 
 class WorkoutRecordForm extends StatefulWidget {
-  // final void Function(WorkoutRecord workoutRecord) addWorkoutRecord;
-  // const WorkoutRecordForm(this.addWorkoutRecord, {super.key});
   const WorkoutRecordForm({super.key});
 
   @override
@@ -20,8 +17,8 @@ class WorkoutRecordForm extends StatefulWidget {
 
 class _WorkoutRecordForm extends State<WorkoutRecordForm>{
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final List<String> _workoutList = ['Running', 'Swimming', 'Cycling', 'Yoga', 'Strength Training',
-    'High-Intensity Interval Training (HIIT)', 'Pilates', 'Boxing'];
+  final List<String> _workoutList = ['Running', 'Swimming', 'Cycling', 'Yoga', 'StrengthTraining',
+    'HIIT', 'Pilates', 'Boxing'];
   final TextEditingController _workoutController = TextEditingController();
   final TextEditingController _durationController = TextEditingController();
   String? _dropdownError;
@@ -71,13 +68,13 @@ class _WorkoutRecordForm extends State<WorkoutRecordForm>{
                       requestFocusOnTap: false,
                       controller: _workoutController,
                       errorText: _dropdownError,
-                      label: const Text('Workout'),
+                      label: Text(AppLocalizations.of(context)!.workout),
                       dropdownMenuEntries: _workoutList
                           .map<DropdownMenuEntry<String>>(
                               (String workout){
                             return DropdownMenuEntry<String>(
                               value: workout,
-                              label: workout,
+                              label: AppLocalizations.of(context)!.workoutList(workout),
                             );
                           }).toList(),
                     )
@@ -86,8 +83,8 @@ class _WorkoutRecordForm extends State<WorkoutRecordForm>{
             SizedBox(
               width: 400.0,
               child: TextFormField(
-                decoration: const InputDecoration(
-                    labelText: 'Duration(mins)'
+                decoration: InputDecoration(
+                    labelText: AppLocalizations.of(context)!.duration
                 ),
                 controller: _durationController,
                 keyboardType: TextInputType.number,
@@ -125,7 +122,7 @@ class _WorkoutRecordForm extends State<WorkoutRecordForm>{
               margin: const EdgeInsets.only(top: 20.0),
               child: ElevatedButton(
                   onPressed: _onSavePressed,
-                  child: const Text('Save')
+                  child: Text(AppLocalizations.of(context)!.save)
               ),
             ),
           ]

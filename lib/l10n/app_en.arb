@@ -1,0 +1,26 @@
+{
+  "points": "Points:",
+  "lastUpdate": "Last Update:",
+  "emotionRecordPage": "Emotion Record Page",
+  "workRecordPage": "Workout Record Page",
+  "dietRecordPage": "Diet Record Page",
+  "duration": "Duration(mins)",
+  "food": "Food",
+  "quantity": "Quantity",
+  "save": "Save",
+  "emotion": "Emotion",
+  "workout": "Workout",
+  "emotionList": "{emotion, select, happy {happy} joyful {joyful} good {good} love {love} grateful {grateful} excited {excited} anxious {anxious} confident {confident} surprised {surprised} amused {amused} bored {bored} curious {curious} disgusted {disgusted} frustrated {frustrated} envious {envious} inquisitive {inquisitive} tense {tense} lonely {lonely} angry {angry} sad {sad} fear {fear} weary {weary} expressionless {expressionless} sick {sick} other{}}",
+  "@emotionList":{
+    "placeholders": {
+      "emotion": {}
+    }
+  },
+  "workoutList": "{workout, select, Running{Running} Swimming {Swimming} Cycling {Cycling} Yoga {Yoga} StrengthTraining {Strength Training} HIIT {High-Intensity Interval Training} Pilates {Pilates} Boxing {Boxing} other {}}",
+  "@workoutList": {
+    "placeholders": {
+      "workout": {}
+    }
+  }
+
+}

@@ -5,6 +5,7 @@ import 'package:cpsc5250hw/last_record.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class EmotionRecordPage extends StatefulWidget {
   const EmotionRecordPage({super.key});
@@ -32,10 +33,10 @@ class _EmotionRecordPageState extends State<EmotionRecordPage> {
             return Scaffold(
                 appBar: AppBar(
                     backgroundColor: Theme.of(context).primaryColor,
-                    leading: Text('Points: ${snapshot.hasData?lastRecord!.points:0}', style: TextStyle(color: Theme.of(context).colorScheme.onPrimary)),
+                    leading: Text('${AppLocalizations.of(context)!.points} ${snapshot.hasData?lastRecord!.points:0}', style: TextStyle(color: Theme.of(context).colorScheme.onPrimary)),
                     title: Center(
-                        child: Text('Emotion Record Page\n'
-                            'Last Update: ${snapshot.hasData? lastRecord!.type+" "+lastRecord!.date.toString().split(" ")[0]: ""}'
+                        child: Text('${AppLocalizations.of(context)!.emotionRecordPage}\n'
+                            '${AppLocalizations.of(context)!.lastUpdate} ${snapshot.hasData? lastRecord!.type+" "+lastRecord!.date.toString().split(" ")[0]: ""}'
                             ,style: TextStyle(color: Theme.of(context).colorScheme.onPrimary, fontSize: 14),
                         )
                     )
@@ -54,8 +55,8 @@ class _EmotionRecordPageState extends State<EmotionRecordPage> {
                     alignment: MainAxisAlignment.center,
                     overflowSpacing: 5.0,
                     children: [
-                      TextButton(onPressed: ()=> GoRouter.of(context).push("/workout"), child: const Text('Workout Record')),
-                      TextButton(onPressed: ()=> GoRouter.of(context).push("/diet"), child: const Text('Diet Record'))
+                      TextButton(onPressed: ()=> GoRouter.of(context).push("/workout"), child: Text(AppLocalizations.of(context)!.workRecordPage)),
+                      TextButton(onPressed: ()=> GoRouter.of(context).push("/diet"), child: Text(AppLocalizations.of(context)!.dietRecordPage))
                     ],
                   ),
                 )

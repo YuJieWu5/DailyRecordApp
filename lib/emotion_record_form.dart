@@ -4,17 +4,16 @@ import 'package:flutter/material.dart';
 import 'emotion_record.dart';
 import 'package:provider/provider.dart';
 import 'package:date_field/date_field.dart';
-import 'package:cpsc5250hw/recording_points.dart';
-import 'package:cpsc5250hw/last_recording_info.dart';
 import 'package:cpsc5250hw/emotion_records_view_model.dart';
 import 'package:uuid/uuid.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 enum EmotionMenu {
   happy('happy', '😆'),
   joyful('joyful', '🥳'),
   good('good','😀'),
   love('love','🥰'),
-  gateful('grateful', '😍'),
+  grateful('grateful', '😍'),
   excited('excited', '🤩'),
   anxious('anxious', '😖'),
   confident('confident','😎'),
@@ -96,14 +95,14 @@ class _EmotionRecordState extends State<EmotionRecordForm>{
                         width: 400.0,
                         requestFocusOnTap: false,
                         errorText: _dropdownError,
-                        label: const Text('Emotion'),
+                        label: Text(AppLocalizations.of(context)!.emotion),
                         controller: _emotionController,
                         dropdownMenuEntries: EmotionMenu.values
                             .map<DropdownMenuEntry<EmotionMenu>>(
                                 (EmotionMenu emotion){
                               return DropdownMenuEntry<EmotionMenu>(
                                 value: emotion,
-                                label: emotion.key+" "+emotion.value,
+                                label: "${AppLocalizations.of(context)!.emotionList(emotion.key)} ${emotion.value}",
                               );
                             }).toList(),
                       ),
@@ -135,7 +134,7 @@ class _EmotionRecordState extends State<EmotionRecordForm>{
                     margin: const EdgeInsets.only(top: 20.0),
                     child: ElevatedButton(
                         onPressed: _onSavePressed,
-                        child: const Text('Save')
+                        child: Text(AppLocalizations.of(context)!.save)
                     )
                   ),
                 ],

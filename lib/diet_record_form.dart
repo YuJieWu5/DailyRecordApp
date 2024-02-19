@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:date_field/date_field.dart';
 import 'package:uuid/uuid.dart';
-
 import 'last_record.dart';
 import 'last_record_view_model.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 
 class DietRecordForm extends StatefulWidget {
@@ -75,7 +75,7 @@ class _DietRecordForm extends State<DietRecordForm>{
                             width: 400.0,
                             controller: _foodController,
                             requestFocusOnTap: true,
-                            label: const Text('Food'),
+                            label: Text(AppLocalizations.of(context)!.food),
                             errorText: _dropdownError,
                             hintText: "Please Enter Food or Select from the DropDownMenu",
                             dropdownMenuEntries: _dietList.map<DropdownMenuEntry<String>>((String food) {
@@ -91,8 +91,8 @@ class _DietRecordForm extends State<DietRecordForm>{
                         width: 400.0,
                         child: TextFormField(
                           controller: _quantityController,
-                          decoration: const InputDecoration(
-                              labelText: 'Quantity'
+                          decoration: InputDecoration(
+                              labelText: AppLocalizations.of(context)!.quantity
                           ),
                           keyboardType: TextInputType.number,
                           validator: (newValue) {
@@ -129,7 +129,7 @@ class _DietRecordForm extends State<DietRecordForm>{
                       margin: const EdgeInsets.only(top: 20.0),
                       child: ElevatedButton(
                           onPressed: _onSavePressed,
-                          child: const Text('Save')
+                          child: Text(AppLocalizations.of(context)!.save)
                       ),
                     )
                   ],
