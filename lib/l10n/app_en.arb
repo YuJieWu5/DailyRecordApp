@@ -21,6 +21,16 @@
     "placeholders": {
       "workout": {}
     }
-  }
-
+  },
+  "emotionErrorText": "Emotion must not be blank.",
+  "dateErrorText": "Date must not be blank.",
+  "workoutErrorText": "Workout must not be blank.",
+  "durationErrorText": "Duration must not be blank.",
+  "foodErrorText": "Diet must not be blank.",
+  "quantityErrorText": "Quantity must not be blank.",
+  "foodHintText": "Please Enter Food or Select from the DropDownMenu",
+  "selectDate": "Select Date",
+  "selectWorkout": "Select Workout",
+  "selectEmotion": "Select Emotion",
+  "usedCupertino": "Use Cupertino UI"
 }

@@ -21,5 +21,16 @@
     "placeholders": {
       "workout": {}
     }
-  }
+  },
+  "emotionErrorText": "請填寫心情",
+  "dateErrorText": "請填寫日期",
+  "workoutErrorText": "請填寫運動項目",
+  "durationErrorText": "請填寫運動時長",
+  "foodErrorText": "請填寫食物品項",
+  "quantityErrorText": "請填寫食物數量",
+  "foodHintText": "請輸入食物或從選單中選取",
+  "selectDate": "選擇日期",
+  "selectWorkout": "選擇運動",
+  "selectEmotion": "選擇心情",
+  "usedCupertino": "使用Cupertino介面"
 }

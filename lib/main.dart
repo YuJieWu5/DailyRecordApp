@@ -14,6 +14,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:cpsc5250hw/app_options.dart';
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
@@ -55,6 +56,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (context)=> AppOptions(WidgetStyle.cupertino)),
         ChangeNotifierProvider(create: (context) => EmotionRecordsViewModel(FloorEmotionRecordsRepository(database))),
         ChangeNotifierProvider(create: (context) => WorkoutRecordsViewModel(FloorWorkoutRecordsRepository(database))),
         ChangeNotifierProvider(create: (context) => DietRecordsViewModel(FloorDietRecordsRepository(database))),

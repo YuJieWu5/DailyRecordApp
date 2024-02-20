@@ -29,7 +29,7 @@ class _DietRecordForm extends State<DietRecordForm>{
     print("Food: "+ _foodController.text+ " Quantity: "+_quantityController.text);
     //   _addDirectItem(_foodController.text);
       if (_foodController.text == null || _foodController.text.isEmpty) {
-        _dropdownError = 'Food must not be blank.';
+        _dropdownError = AppLocalizations.of(context)!.foodErrorText;
         _formKey.currentState?.validate();
         setState(() {});
       } else {
@@ -77,7 +77,7 @@ class _DietRecordForm extends State<DietRecordForm>{
                             requestFocusOnTap: true,
                             label: Text(AppLocalizations.of(context)!.food),
                             errorText: _dropdownError,
-                            hintText: "Please Enter Food or Select from the DropDownMenu",
+                            hintText: AppLocalizations.of(context)!.foodHintText,
                             dropdownMenuEntries: _dietList.map<DropdownMenuEntry<String>>((String food) {
                               return DropdownMenuEntry<String>(
                                 value: food,
@@ -97,7 +97,7 @@ class _DietRecordForm extends State<DietRecordForm>{
                           keyboardType: TextInputType.number,
                           validator: (newValue) {
                             if(newValue == null || newValue.isEmpty) {
-                              return 'Quantity must not be blank.';
+                              return AppLocalizations.of(context)!.quantityErrorText;
                             }
                             return null;
                           },
@@ -119,7 +119,7 @@ class _DietRecordForm extends State<DietRecordForm>{
                         },
                         validator: (newValue) {
                           if(newValue == null) {
-                            return 'Date must not be blank.';
+                            return AppLocalizations.of(context)!.dateErrorText;
                           }
                           return null;
                         },
