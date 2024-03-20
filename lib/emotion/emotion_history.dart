@@ -1,57 +1,62 @@
-import 'package:cpsc5250hw/workout_records_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import './workout_record.dart';
+import './emotion_record.dart';
+import 'package:cpsc5250hw/emotion_records_view_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:cpsc5250hw/app_options.dart';
 
-class WorkoutHistory extends StatefulWidget {
-  const WorkoutHistory({super.key});
+class EmotionHistory extends StatefulWidget {
+  const EmotionHistory({super.key});
 
   @override
-  createState() => _WorkoutHistoryState();
+  createState() => _EmotionHistory();
 }
 
-class _WorkoutHistoryState extends State<WorkoutHistory> {
-  // final List<WorkoutRecord> _workoutRecords;
-  // const WorkoutHistory(this._workoutRecords, {super.key});
+class _EmotionHistory extends State<EmotionHistory> {
 
   void _onDeletePressed(String id){
-    context.read<WorkoutRecordsViewModel>().deleteWorkoutRecord(id);
+    context.read<EmotionRecordsViewModel>().deleteEmotionRecord(id);
   }
-
 
   @override
   Widget build(BuildContext context) {
-    Future<List<WorkoutRecord>> futureWorkoutRecords = context.select<WorkoutRecordsViewModel,Future<List<WorkoutRecord>>>(
-        (viewModel)=> viewModel.listAllWorkoutRecords()
+    Future<List<EmotionRecord>> futureEmotionRecords = context.select<
+        EmotionRecordsViewModel,
+        Future<List<EmotionRecord>>>(
+            (viewModel) => viewModel.listAllEmotionRecords()
     );
-
     final appOptions = context.watch<AppOptions>();
 
     return FutureBuilder(
-        future: futureWorkoutRecords,
+        future: futureEmotionRecords,
         builder: (context, snapshot) {
           if (appOptions.style == WidgetStyle.cupertino) {
             if (snapshot.hasData) {
-              final workoutRecords = snapshot.data!;
+              final emotionRecords = snapshot.data!;
               return Column(
-                children: workoutRecords.map((record) => Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                children: emotionRecords.map((record) => Container(
+                  padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Expanded(
+                        flex: 2,
+                        child: Text(
+                          record.icon,
+                          style: CupertinoTheme.of(context).textTheme.navTitleTextStyle,
+                        ),
+                      ),
+                      Expanded(
+                        flex: 8,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              record.workout,
+                              record.emotion,
                               style: CupertinoTheme.of(context).textTheme.navTitleTextStyle,
                             ),
                             Text(
-                              '${record.duration} ${record.date.toString().split(' ')[0]}',
-                              style: CupertinoTheme.of(context).textTheme.textStyle,
+                              '${record.date.toString().split(' ')[0]}',
+                              style: CupertinoTheme.of(context).textTheme.textStyle.copyWith(fontSize: 15),
                             ),
                           ],
                         ),
@@ -81,19 +86,18 @@ class _WorkoutHistoryState extends State<WorkoutHistory> {
           }
           else {
             if (snapshot.hasData) {
-              final workoutRecords = snapshot.data!;
+              final emotionRecords = snapshot.data!;
               return Column(
-                children: workoutRecords.map((record) =>
+                children: emotionRecords.map((record) =>
                     ListTile(
-                      title: Text(record.workout),
-                      subtitle: Text(
-                          '${record.duration} ${record.date.toString().split(
-                              ' ')[0]}'),
+                      leading: Text(record.icon),
+                      title: Text(record.emotion),
+                      subtitle: Text('${record.date.toString().split(' ')[0]}'),
                       trailing: IconButton(
-                          icon: const Icon(Icons.delete),
-                          onPressed: () {
-                            _onDeletePressed(record.id);
-                          }
+                        icon: const Icon(Icons.delete),
+                        onPressed: () {
+                          _onDeletePressed(record.id);
+                        },
                       ),
                     )).toList(),
               );
@@ -105,6 +109,6 @@ class _WorkoutHistoryState extends State<WorkoutHistory> {
             }
           }
         }
-      );
+    );
   }
 }

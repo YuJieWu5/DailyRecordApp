@@ -1,62 +1,55 @@
+import 'package:cpsc5250hw/workout_records_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import './emotion_record.dart';
-import 'package:cpsc5250hw/emotion_records_view_model.dart';
+import './workout_record.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:cpsc5250hw/app_options.dart';
 
-class EmotionHistory extends StatefulWidget {
-  const EmotionHistory({super.key});
+class WorkoutHistory extends StatefulWidget {
+  const WorkoutHistory({super.key});
 
   @override
-  createState() => _EmotionHistory();
+  createState() => _WorkoutHistoryState();
 }
 
-class _EmotionHistory extends State<EmotionHistory> {
+class _WorkoutHistoryState extends State<WorkoutHistory> {
 
   void _onDeletePressed(String id){
-    context.read<EmotionRecordsViewModel>().deleteEmotionRecord(id);
+    context.read<WorkoutRecordsViewModel>().deleteWorkoutRecord(id);
   }
+
 
   @override
   Widget build(BuildContext context) {
-    Future<List<EmotionRecord>> futureEmotionRecords = context.select<
-        EmotionRecordsViewModel,
-        Future<List<EmotionRecord>>>(
-            (viewModel) => viewModel.listAllEmotionRecords()
+    Future<List<WorkoutRecord>> futureWorkoutRecords = context.select<WorkoutRecordsViewModel,Future<List<WorkoutRecord>>>(
+        (viewModel)=> viewModel.listAllWorkoutRecords()
     );
+
     final appOptions = context.watch<AppOptions>();
 
     return FutureBuilder(
-        future: futureEmotionRecords,
+        future: futureWorkoutRecords,
         builder: (context, snapshot) {
           if (appOptions.style == WidgetStyle.cupertino) {
             if (snapshot.hasData) {
-              final emotionRecords = snapshot.data!;
+              final workoutRecords = snapshot.data!;
               return Column(
-                children: emotionRecords.map((record) => Container(
-                  padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                children: workoutRecords.map((record) => Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
                   child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Expanded(
-                        flex: 2,
-                        child: Text(
-                          record.icon,
-                          style: CupertinoTheme.of(context).textTheme.navTitleTextStyle,
-                        ),
-                      ),
-                      Expanded(
-                        flex: 8,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              record.emotion,
+                              record.workout,
                               style: CupertinoTheme.of(context).textTheme.navTitleTextStyle,
                             ),
                             Text(
-                              '${record.date.toString().split(' ')[0]}',
-                              style: CupertinoTheme.of(context).textTheme.textStyle.copyWith(fontSize: 15),
+                              '${record.duration} ${record.date.toString().split(' ')[0]}',
+                              style: CupertinoTheme.of(context).textTheme.textStyle,
                             ),
                           ],
                         ),
@@ -81,23 +74,24 @@ class _EmotionHistory extends State<EmotionHistory> {
                 style: TextStyle(color: CupertinoColors.systemGrey),
               );
             } else {
-              return CupertinoActivityIndicator();
+              return const CupertinoActivityIndicator();
             }
           }
           else {
             if (snapshot.hasData) {
-              final emotionRecords = snapshot.data!;
+              final workoutRecords = snapshot.data!;
               return Column(
-                children: emotionRecords.map((record) =>
+                children: workoutRecords.map((record) =>
                     ListTile(
-                      leading: Text(record.icon),
-                      title: Text(record.emotion),
-                      subtitle: Text('${record.date.toString().split(' ')[0]}'),
+                      title: Text(record.workout),
+                      subtitle: Text(
+                          '${record.duration} ${record.date.toString().split(
+                              ' ')[0]}'),
                       trailing: IconButton(
-                        icon: const Icon(Icons.delete),
-                        onPressed: () {
-                          _onDeletePressed(record.id);
-                        },
+                          icon: const Icon(Icons.delete),
+                          onPressed: () {
+                            _onDeletePressed(record.id);
+                          }
                       ),
                     )).toList(),
               );
@@ -109,6 +103,6 @@ class _EmotionHistory extends State<EmotionHistory> {
             }
           }
         }
-    );
+      );
   }
 }

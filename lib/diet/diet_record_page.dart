@@ -53,7 +53,7 @@ class _DietRecordPageState extends State<DietRecordPage> {
                       overflowSpacing: 5.0,
                       children: [
                         TextButton(onPressed: ()=> GoRouter.of(context).push("/workout"), child: Text(AppLocalizations.of(context)!.workRecordPage)),
-                        TextButton(onPressed: ()=> GoRouter.of(context).push("/"), child: Text(AppLocalizations.of(context)!.emotionRecordPage))
+                        TextButton(onPressed: ()=> GoRouter.of(context).push("/emotion"), child: Text(AppLocalizations.of(context)!.emotionRecordPage))
                       ],
                     ),
                   )

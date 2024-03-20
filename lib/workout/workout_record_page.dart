@@ -103,7 +103,7 @@ class _WorkoutRecordPageState extends State<WorkoutRecordPage> {
                       alignment: MainAxisAlignment.center,
                       overflowSpacing: 5.0,
                       children: [
-                        TextButton(onPressed: ()=> GoRouter.of(context).push("/"), child: Text(AppLocalizations.of(context)!.emotionRecordPage)),
+                        TextButton(onPressed: ()=> GoRouter.of(context).push("/emotion"), child: Text(AppLocalizations.of(context)!.emotionRecordPage)),
                         TextButton(onPressed: ()=> GoRouter.of(context).push("/diet"), child: Text(AppLocalizations.of(context)!.dietRecordPage))
                       ],
                     ),

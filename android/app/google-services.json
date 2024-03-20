@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "561130277695",
+    "project_id": "cpsc5250hw",
+    "storage_bucket": "cpsc5250hw.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:561130277695:android:1bda66fa703bcf4fd4218a",
+        "android_client_info": {
+          "package_name": "com.example.cpsc5250hw"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCwEA8NnO9LIOQW5BYLiGVLTjcA3-uNKA0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

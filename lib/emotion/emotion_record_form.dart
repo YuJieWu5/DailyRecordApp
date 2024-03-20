@@ -9,6 +9,7 @@ import 'package:cpsc5250hw/emotion_records_view_model.dart';
 import 'package:uuid/uuid.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:cpsc5250hw/app_options.dart';
+import 'package:cpsc5250hw/language_options.dart';
 
 enum EmotionMenu {
   happy('happy', '😆'),
@@ -55,8 +56,16 @@ class _EmotionRecordState extends State<EmotionRecordForm>{
   String? _dropdownError;
   String? _selectedEmotion;
   String? _selectedIcon;
-  bool? _currentValue;
+  bool? _isUsingCupertino;
+  bool? _isZh;
   var uuid = Uuid();
+
+  @override
+  void initState() {
+    super.initState();
+    _isUsingCupertino = context.read<AppOptions>().style == WidgetStyle.cupertino? true: false;
+    _isZh = context.read<LocaleProvider>().locale == Locale('en')? false : true;
+  }
 
   void _onSavePressed(){
     print("User selected " + _emotionController.text + " emotion and pressed save!");
@@ -84,13 +93,23 @@ class _EmotionRecordState extends State<EmotionRecordForm>{
   }
 
   void _onStyleChange(bool? newValue){
-    print(newValue);
     setState(() {
-      _currentValue = newValue;
-      if(_currentValue!){
+      _isUsingCupertino = newValue;
+      if(_isUsingCupertino!){
         context.read<AppOptions>().style = WidgetStyle.cupertino;
       }else{
         context.read<AppOptions>().style = WidgetStyle.material;
+      }
+    });
+  }
+
+  void _onLocaleChange(bool? newValue){
+    setState(() {
+      _isZh = newValue;
+      if(_isZh!){
+        context.read<LocaleProvider>().setLocale(Locale('zh'));
+      }else{
+        context.read<LocaleProvider>().setLocale(Locale('en'));
       }
     });
   }
@@ -159,9 +178,20 @@ class _EmotionRecordState extends State<EmotionRecordForm>{
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    Text(AppLocalizations.of(context)!.en, style: const TextStyle(fontSize: 14, color: CupertinoColors.black, decoration: TextDecoration.none)),
+                    CupertinoSwitch(
+                      value: _isZh ?? false,
+                      onChanged: _onLocaleChange,
+                    ),
+                    Text(AppLocalizations.of(context)!.zh, style: const TextStyle(fontSize: 14, color: CupertinoColors.black, decoration: TextDecoration.none)),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
                     Text(AppLocalizations.of(context)!.usedCupertino, style: const TextStyle(fontSize: 14, color: CupertinoColors.black, decoration: TextDecoration.none)),
                     CupertinoSwitch(
-                      value: _currentValue ?? false,
+                      value: _isUsingCupertino ?? false,
                       onChanged: _onStyleChange,
                     )
                   ],
@@ -209,11 +239,22 @@ class _EmotionRecordState extends State<EmotionRecordForm>{
                 Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children:[
+                      Text(AppLocalizations.of(context)!.en),
+                      Switch(
+                        value: _isZh??false,
+                        onChanged: _onLocaleChange,
+                      ),
+                      Text(AppLocalizations.of(context)!.zh),
+                    ]
+                ),
+                Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children:[
                       Text(AppLocalizations.of(context)!.usedCupertino),
-                      Checkbox(
-                          value: _currentValue??false,
-                          onChanged: _onStyleChange,
-                        )
+                      Switch(
+                          value: _isUsingCupertino??false,
+                          onChanged: _onStyleChange
+                      )
                     ]
                 ),
                 Container(

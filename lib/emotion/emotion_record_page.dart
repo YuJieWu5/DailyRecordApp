@@ -103,6 +103,7 @@ class _EmotionRecordPageState extends State<EmotionRecordPage> {
                     overflowSpacing: 5.0,
                     children: [
                       TextButton(onPressed: ()=> GoRouter.of(context).push("/workout"), child: Text(AppLocalizations.of(context)!.workRecordPage)),
+                      // TextButton(onPressed: ()=> GoRouter.of(context).push("/leaderboard"), child: const Text("Leaderboard")),
                       TextButton(onPressed: ()=> GoRouter.of(context).push("/diet"), child: Text(AppLocalizations.of(context)!.dietRecordPage))
                     ],
                   ),

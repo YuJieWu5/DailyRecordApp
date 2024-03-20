@@ -9,6 +9,7 @@ import 'package:cpsc5250hw/workout_records_view_model.dart';
 import 'package:date_field/date_field.dart';
 import 'package:uuid/uuid.dart';
 import 'package:cpsc5250hw/app_options.dart';
+import 'package:cpsc5250hw/language_options.dart';
 
 class WorkoutRecordForm extends StatefulWidget {
   const WorkoutRecordForm({super.key});
@@ -25,9 +26,17 @@ class _WorkoutRecordForm extends State<WorkoutRecordForm>{
   final TextEditingController _durationController = TextEditingController();
   String? _selectedWorkout;
   String? _dropdownError;
-  bool? _currentValue;
+  bool? _isUsingCupertino;
+  bool? _isZh;
   DateTime _dateTime = DateTime.now();
   var uuid = Uuid();
+
+  @override
+  void initState() {
+    super.initState();
+    _isUsingCupertino = context.read<AppOptions>().style == WidgetStyle.cupertino? true: false;
+    _isZh = context.read<LocaleProvider>().locale == Locale('en')? false : true;
+  }
 
   void _onSavePressed(){
     print("Workout: "+ _workoutController.text+ " Quantity: "+_durationController.text);
@@ -38,7 +47,6 @@ class _WorkoutRecordForm extends State<WorkoutRecordForm>{
     } else {
       _dropdownError = null;
       if(_formKey.currentState?.validate()??false){
-        print(_selectedWorkout);
         WorkoutRecord record = WorkoutRecord(
             uuid.v4(),
             _selectedWorkout?? _workoutController.text,
@@ -59,13 +67,23 @@ class _WorkoutRecordForm extends State<WorkoutRecordForm>{
   }
 
   void _onStyleChange(bool? newValue){
-    print(newValue);
     setState(() {
-      _currentValue = newValue;
-      if(_currentValue!){
+      _isUsingCupertino = newValue;
+      if(_isUsingCupertino!){
         context.read<AppOptions>().style = WidgetStyle.cupertino;
       }else{
         context.read<AppOptions>().style = WidgetStyle.material;
+      }
+    });
+  }
+
+  void _onLocaleChange(bool? newValue){
+    setState(() {
+      _isZh = newValue;
+      if(_isZh!){
+        context.read<LocaleProvider>().setLocale(Locale('zh'));
+      }else{
+        context.read<LocaleProvider>().setLocale(Locale('en'));
       }
     });
   }
@@ -83,7 +101,6 @@ class _WorkoutRecordForm extends State<WorkoutRecordForm>{
             useMagnifier: true,
             itemExtent: 32,
             onSelectedItemChanged: (int index) {
-              print(_workoutList[index]);
               setState(() {
                 _selectedWorkout = AppLocalizations.of(context)!.workoutList(_workoutList[index]);
               });
@@ -130,9 +147,20 @@ class _WorkoutRecordForm extends State<WorkoutRecordForm>{
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  Text(AppLocalizations.of(context)!.en, style: const TextStyle(fontSize: 14, color: CupertinoColors.black, decoration: TextDecoration.none)),
+                  CupertinoSwitch(
+                    value: _isZh ?? false,
+                    onChanged: _onLocaleChange,
+                  ),
+                  Text(AppLocalizations.of(context)!.zh, style: const TextStyle(fontSize: 14, color: CupertinoColors.black, decoration: TextDecoration.none)),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
                   Text(AppLocalizations.of(context)!.usedCupertino, style: const TextStyle(fontSize: 14, color: CupertinoColors.black, decoration: TextDecoration.none)),
                   CupertinoSwitch(
-                    value: _currentValue ?? false,
+                    value: _isUsingCupertino ?? false,
                     onChanged: _onStyleChange,
                   )
                 ],
@@ -194,9 +222,20 @@ class _WorkoutRecordForm extends State<WorkoutRecordForm>{
             Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children:[
+                  Text(AppLocalizations.of(context)!.en),
+                  Switch(
+                    value: _isZh??false,
+                    onChanged: _onLocaleChange,
+                  ),
+                  Text(AppLocalizations.of(context)!.zh),
+                ]
+            ),
+            Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children:[
                   Text(AppLocalizations.of(context)!.usedCupertino),
-                  Checkbox(
-                    value: _currentValue??false,
+                  Switch(
+                    value: _isUsingCupertino??false,
                     onChanged: _onStyleChange,
                   )
                 ]

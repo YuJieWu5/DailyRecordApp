@@ -32,5 +32,13 @@
   "selectDate": "Select Date",
   "selectWorkout": "Select Workout",
   "selectEmotion": "Select Emotion",
-  "usedCupertino": "Use Cupertino UI"
+  "usedCupertino": "Cupertino UI",
+  "zh": "zh",
+  "en": "en",
+  "leaderboard": "Leaderboard",
+  "signInToView": "To see the leaderboard, please sign in.",
+  "signIn": "Sign In",
+  "signUp": "Sign Up",
+  "register": "Register Mode",
+  "createAccount": "Create Account"
 }

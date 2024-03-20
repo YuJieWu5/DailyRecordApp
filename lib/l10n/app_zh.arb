@@ -32,5 +32,13 @@
   "selectDate": "選擇日期",
   "selectWorkout": "選擇運動",
   "selectEmotion": "選擇心情",
-  "usedCupertino": "使用Cupertino介面"
+  "usedCupertino": "Cupertino介面",
+  "zh": "中文(繁體)",
+  "en": "英文",
+  "leaderboard": "排行榜",
+  "signInToView": "欲查看排行榜，請先等入！",
+  "signIn": "登入",
+  "signUp": "註冊",
+  "register": "訪客模式",
+  "createAccount": "註冊帳號"
 }
