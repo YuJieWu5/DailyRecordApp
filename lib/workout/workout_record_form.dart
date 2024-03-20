@@ -1,11 +1,16 @@
+import 'package:cloud_functions/cloud_functions.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'last_record.dart';
-import 'last_record_view_model.dart';
-import 'workout_record.dart';
+import '../auth_info.dart';
+import '../last_record.dart';
+import '../last_record_view_model.dart';
+import '../recording_points_dao.dart';
+import './workout_record.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:cpsc5250hw/workout_records_view_model.dart';
+import 'package:cpsc5250hw/workout/workout_records_view_model.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:date_field/date_field.dart';
 import 'package:uuid/uuid.dart';
 import 'package:cpsc5250hw/app_options.dart';
@@ -57,6 +62,7 @@ class _WorkoutRecordForm extends State<WorkoutRecordForm>{
         context.read<WorkoutRecordsViewModel>().addWorkoutRecord(record);
         context.read<LastRecordViewModel>().addLastRecord(lastRecord);
         _formKey.currentState!.reset();
+        _updateFirestorePoints();
       }
       setState(() {
         _dateTime = DateTime.now();
@@ -65,6 +71,36 @@ class _WorkoutRecordForm extends State<WorkoutRecordForm>{
       });
     }
   }
+
+  Future<void> _updateFirestorePoints() async {
+    var userId = context.read<AuthInfo>().getUserId();
+
+    if (userId == null) {
+      FirebaseAuth auth = FirebaseAuth.instance;
+      User? user = auth.currentUser;
+
+      if (user != null) {
+        userId = user.uid;
+        context.read<AuthInfo>().setUserId(user.uid);
+        context.read<AuthInfo>().setUserEmail(user.email!);
+      } else {
+        print("No user is signed in.");
+        return Future.value();
+      }
+    }
+
+    // print(userId);
+
+    try {
+      FirebaseFunctions functions = FirebaseFunctions.instance;
+      HttpsCallable callable = functions.httpsCallableFromUrl("https://updatepoints-ogagcsc63a-uc.a.run.app/updatePoints?UserID=$userId");
+      final result = await callable.call();
+      print("Function result: ${result.data}");
+    } catch (e) {
+      print("Error calling function: $e");
+    }
+  }
+
 
   void _onStyleChange(bool? newValue){
     setState(() {

@@ -1,11 +1,16 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:cpsc5250hw/last_record.dart';
 import 'package:cpsc5250hw/last_record_view_model.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'emotion_record.dart';
+import '../auth_info.dart';
+import '../recording_points_dao.dart';
+import './emotion_record.dart';
 import 'package:provider/provider.dart';
 import 'package:date_field/date_field.dart';
-import 'package:cpsc5250hw/emotion_records_view_model.dart';
+import 'package:cpsc5250hw/emotion/emotion_records_view_model.dart';
 import 'package:uuid/uuid.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:cpsc5250hw/app_options.dart';
@@ -88,7 +93,37 @@ class _EmotionRecordState extends State<EmotionRecordForm>{
         context.read<LastRecordViewModel>().addLastRecord(lastRecord);
         _emotionController.clear();
         _formKey.currentState!.reset();
+        _updateFirestorePoints();
       }
+    }
+  }
+
+  Future<void> _updateFirestorePoints() async {
+    var userId = context.read<AuthInfo>().getUserId();
+
+    if (userId == null) {
+      FirebaseAuth auth = FirebaseAuth.instance;
+      User? user = auth.currentUser;
+
+      if (user != null) {
+        userId = user.uid;
+        context.read<AuthInfo>().setUserId(user.uid);
+        context.read<AuthInfo>().setUserEmail(user.email!);
+      } else {
+        print("No user is signed in.");
+        return Future.value();
+      }
+    }
+
+    // print(userId);
+
+    try {
+      FirebaseFunctions functions = FirebaseFunctions.instance;
+      HttpsCallable callable = functions.httpsCallableFromUrl("https://updatepoints-ogagcsc63a-uc.a.run.app/updatePoints?UserID=$userId");
+      final result = await callable.call();
+      print("Function result: ${result.data}");
+    } catch (e) {
+      print("Error calling function: $e");
     }
   }
 

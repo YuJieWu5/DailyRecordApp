@@ -1,5 +1,5 @@
-import 'package:cpsc5250hw/workout_history.dart';
-import 'package:cpsc5250hw/workout_record.dart';
+import 'package:cpsc5250hw/workout/workout_history.dart';
+import 'package:cpsc5250hw/workout/workout_record.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 

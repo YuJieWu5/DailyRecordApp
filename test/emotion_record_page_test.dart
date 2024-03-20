@@ -1,6 +1,6 @@
-import 'package:cpsc5250hw/emotion_record_page.dart';
-import 'package:cpsc5250hw/emotion_history.dart';
-import 'package:cpsc5250hw/emotion_record.dart';
+import 'package:cpsc5250hw/emotion/emotion_record_page.dart';
+import 'package:cpsc5250hw/emotion/emotion_history.dart';
+import 'package:cpsc5250hw/emotion/emotion_record.dart';
 import 'package:cpsc5250hw/last_recording_info.dart';
 import 'package:cpsc5250hw/recording_points.dart';
 import 'package:flutter/material.dart';

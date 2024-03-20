@@ -1,7 +1,7 @@
 import 'package:cpsc5250hw/floor_model/recorder_database.dart';
 import 'package:cpsc5250hw/floor_model/emotion_record_entity.dart';
-import 'package:cpsc5250hw/emotion_records_repository.dart';
-import 'package:cpsc5250hw/emotion_record.dart';
+import 'package:cpsc5250hw/emotion/emotion_records_repository.dart';
+import 'package:cpsc5250hw/emotion/emotion_record.dart';
 
 class FloorEmotionRecordsRepository implements EmotionRecordsRepository{
   RecorderDatabase _database;

@@ -1,4 +1,4 @@
-import 'package:cpsc5250hw/diet_record_form.dart';
+import 'package:cpsc5250hw/diet/diet_record_form.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:cpsc5250hw/last_recording_info.dart';

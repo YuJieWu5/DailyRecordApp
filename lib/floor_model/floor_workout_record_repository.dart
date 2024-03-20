@@ -1,7 +1,7 @@
 import 'package:cpsc5250hw/floor_model/recorder_database.dart';
 import 'package:cpsc5250hw/floor_model/workout_record_entity.dart';
-import 'package:cpsc5250hw/workout_records_repository.dart';
-import 'package:cpsc5250hw/workout_record.dart';
+import 'package:cpsc5250hw/workout/workout_records_repository.dart';
+import 'package:cpsc5250hw/workout/workout_record.dart';
 import 'package:uuid/uuid.dart';
 
 class FloorWorkoutRecordsRepository implements WorkoutRecordsRepository{

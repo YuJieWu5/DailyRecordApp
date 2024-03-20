@@ -1,7 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cpsc5250hw/last_record_view_model.dart';
-import 'package:cpsc5250hw/workout_history.dart';
-import 'package:cpsc5250hw/workout_record_form.dart';
-import 'last_record.dart';
+import 'package:cpsc5250hw/workout/workout_history.dart';
+import 'package:cpsc5250hw/workout/workout_record_form.dart';
+import '../auth_info.dart';
+import '../last_record.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
@@ -24,6 +26,7 @@ class _WorkoutRecordPageState extends State<WorkoutRecordPage> {
             (viewModel)=> viewModel.getLastRecord()
     );
     final appOptions = context.watch<AppOptions>();
+
 
     return FutureBuilder(
         future: futureLastRecords,
@@ -66,6 +69,10 @@ class _WorkoutRecordPageState extends State<WorkoutRecordPage> {
                             child: Text(AppLocalizations.of(context)!.emotionRecordPage),
                           ),
                           CupertinoButton(
+                            onPressed: () => GoRouter.of(context).push("/leaderboard"),
+                            child: Text(AppLocalizations.of(context)!.leaderboard),
+                          ),
+                          CupertinoButton(
                             onPressed: () => GoRouter.of(context).push("/diet"),
                             child: Text(AppLocalizations.of(context)!.dietRecordPage),
                           ),
@@ -104,6 +111,7 @@ class _WorkoutRecordPageState extends State<WorkoutRecordPage> {
                       overflowSpacing: 5.0,
                       children: [
                         TextButton(onPressed: ()=> GoRouter.of(context).push("/emotion"), child: Text(AppLocalizations.of(context)!.emotionRecordPage)),
+                        TextButton(onPressed: ()=> GoRouter.of(context).push("/leaderboard"), child: Text(AppLocalizations.of(context)!.leaderboard)),
                         TextButton(onPressed: ()=> GoRouter.of(context).push("/diet"), child: Text(AppLocalizations.of(context)!.dietRecordPage))
                       ],
                     ),

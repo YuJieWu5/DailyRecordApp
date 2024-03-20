@@ -1,7 +1,7 @@
-import 'package:cpsc5250hw/workout_history.dart';
-import 'package:cpsc5250hw/workout_record.dart';
-import 'package:cpsc5250hw/workout_record_form.dart';
-import 'package:cpsc5250hw/workout_record_page.dart';
+import 'package:cpsc5250hw/workout/workout_history.dart';
+import 'package:cpsc5250hw/workout/workout_record.dart';
+import 'package:cpsc5250hw/workout/workout_record_form.dart';
+import 'package:cpsc5250hw/workout/workout_record_page.dart';
 import 'package:cpsc5250hw/last_recording_info.dart';
 import 'package:cpsc5250hw/recording_points.dart';
 import 'package:flutter/material.dart';

@@ -1,7 +1,7 @@
 import 'package:cpsc5250hw/floor_model/recorder_database.dart';
 import 'package:cpsc5250hw/floor_model/diet_record_entity.dart';
-import 'package:cpsc5250hw/diet_records_repository.dart';
-import 'package:cpsc5250hw/diet_record.dart';
+import 'package:cpsc5250hw/diet/diet_records_repository.dart';
+import 'package:cpsc5250hw/diet/diet_record.dart';
 import 'package:uuid/uuid.dart';
 
 class FloorDietRecordsRepository implements DietRecordsRepository{

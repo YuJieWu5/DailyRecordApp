@@ -1,15 +1,15 @@
 import 'package:flutter/foundation.dart';
 
-class UserInfo with ChangeNotifier{
-  String _id;
-  String _email;
-  UserInfo(this._id, this._email);
+class AuthInfo with ChangeNotifier{
+  String? _id;
+  String? _email;
+  AuthInfo(this._id, this._email);
 
-  String getUserId(){
+  String? getUserId(){
     return _id;
   }
 
-  String getUserEmail(){
+  String? getUserEmail(){
     return _email;
   }
 

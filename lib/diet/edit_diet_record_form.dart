@@ -1,5 +1,5 @@
-import 'package:cpsc5250hw/diet_record.dart';
-import 'package:cpsc5250hw/diet_records_view_model.dart';
+import 'package:cpsc5250hw/diet/diet_record.dart';
+import 'package:cpsc5250hw/diet/diet_records_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

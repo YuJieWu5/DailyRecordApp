@@ -1,12 +1,18 @@
-import 'package:cpsc5250hw/diet_record.dart';
-import 'package:cpsc5250hw/diet_records_view_model.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_functions/cloud_functions.dart';
+import 'package:cpsc5250hw/diet/diet_record.dart';
+import 'package:cpsc5250hw/diet/diet_records_view_model.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:date_field/date_field.dart';
 import 'package:uuid/uuid.dart';
-import 'last_record.dart';
-import 'last_record_view_model.dart';
+import '../auth_info.dart';
+import '../last_record.dart';
+import '../last_record_view_model.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+import '../recording_points_dao.dart';
 
 
 class DietRecordForm extends StatefulWidget {
@@ -44,11 +50,9 @@ class _DietRecordForm extends State<DietRecordForm>{
           LastRecord lastRecord = LastRecord("Diet Record", DateTime.now(),5);
           context.read<DietRecordsViewModel>().addDietRecord(record);
           context.read<LastRecordViewModel>().addLastRecord(lastRecord);
-          // context.read<LastRecordingInfo>().setRecordingDate(_dateTime.toString());
-          // context.read<LastRecordingInfo>().setRecordingType("Diet Record");
-          // context.read<RecordingPoints>().setRecordingPoints();
 
           _formKey.currentState!.reset();
+          _updateFirestorePoints();
         }
 
         setState(() {
@@ -59,6 +63,35 @@ class _DietRecordForm extends State<DietRecordForm>{
           _quantityController.clear();
         });
       }
+  }
+
+  Future<void> _updateFirestorePoints() async {
+    var userId = context.read<AuthInfo>().getUserId();
+
+    if (userId == null) {
+      FirebaseAuth auth = FirebaseAuth.instance;
+      User? user = auth.currentUser;
+
+      if (user != null) {
+        userId = user.uid;
+        context.read<AuthInfo>().setUserId(user.uid);
+        context.read<AuthInfo>().setUserEmail(user.email!);
+      } else {
+        print("No user is signed in.");
+        return Future.value();
+      }
+    }
+
+    // print(userId);
+
+    try {
+      FirebaseFunctions functions = FirebaseFunctions.instance;
+      HttpsCallable callable = functions.httpsCallableFromUrl("https://updatepoints-ogagcsc63a-uc.a.run.app/updatePoints?UserID=$userId");
+      final result = await callable.call();
+      print("Function result: ${result.data}");
+    } catch (e) {
+      print("Error calling function: $e");
+    }
   }
 
   @override

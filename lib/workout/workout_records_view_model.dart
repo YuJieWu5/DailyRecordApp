@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'workout_record.dart';
-import 'workout_records_repository.dart';
+import './workout_records_repository.dart';
 
 class WorkoutRecordsViewModel with ChangeNotifier{
   WorkoutRecordsRepository _repository;

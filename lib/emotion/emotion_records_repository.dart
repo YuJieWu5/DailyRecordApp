@@ -1,4 +1,4 @@
-import 'emotion_record.dart';
+import './emotion_record.dart';
 
 abstract class EmotionRecordsRepository{
   Future<void> addEmotionRecord(EmotionRecord record);

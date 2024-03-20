@@ -1,4 +1,4 @@
-import 'package:cpsc5250hw/workout_records_view_model.dart';
+import 'package:cpsc5250hw/workout/workout_records_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import './workout_record.dart';

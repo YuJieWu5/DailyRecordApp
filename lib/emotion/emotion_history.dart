@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import './emotion_record.dart';
-import 'package:cpsc5250hw/emotion_records_view_model.dart';
+import 'package:cpsc5250hw/emotion/emotion_records_view_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:cpsc5250hw/app_options.dart';
 

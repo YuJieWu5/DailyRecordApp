@@ -1,10 +1,12 @@
-import 'package:cpsc5250hw/diet_history.dart';
-import 'package:cpsc5250hw/diet_record_form.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cpsc5250hw/diet/diet_history.dart';
+import 'package:cpsc5250hw/diet/diet_record_form.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'last_record.dart';
-import 'last_record_view_model.dart';
+import '../auth_info.dart';
+import '../last_record.dart';
+import '../last_record_view_model.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -27,6 +29,7 @@ class _DietRecordPageState extends State<DietRecordPage> {
         future: futureLastRecords,
         builder: (context, snapshot){
           final lastRecord = snapshot.hasData?snapshot.data!:null;
+
           return Scaffold(
               appBar: AppBar(
                   backgroundColor: Theme.of(context).primaryColor,
@@ -53,6 +56,7 @@ class _DietRecordPageState extends State<DietRecordPage> {
                       overflowSpacing: 5.0,
                       children: [
                         TextButton(onPressed: ()=> GoRouter.of(context).push("/workout"), child: Text(AppLocalizations.of(context)!.workRecordPage)),
+                        TextButton(onPressed: ()=> GoRouter.of(context).push("/leaderboard"), child: Text(AppLocalizations.of(context)!.leaderboard)),
                         TextButton(onPressed: ()=> GoRouter.of(context).push("/emotion"), child: Text(AppLocalizations.of(context)!.emotionRecordPage))
                       ],
                     ),

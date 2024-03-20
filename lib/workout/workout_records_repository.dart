@@ -1,4 +1,4 @@
-import 'workout_record.dart';
+import './workout_record.dart';
 
 abstract class WorkoutRecordsRepository{
   Future<void> addWorkoutRecord(WorkoutRecord record);

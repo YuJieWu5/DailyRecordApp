@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'diet_record.dart';
+import './diet_record.dart';
 import 'diet_records_repository.dart';
 
 class DietRecordsViewModel with ChangeNotifier{

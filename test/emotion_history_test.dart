@@ -1,5 +1,5 @@
-import 'package:cpsc5250hw/emotion_history.dart';
-import 'package:cpsc5250hw/emotion_record.dart';
+import 'package:cpsc5250hw/emotion/emotion_history.dart';
+import 'package:cpsc5250hw/emotion/emotion_record.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 

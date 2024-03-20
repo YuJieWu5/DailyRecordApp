@@ -27,7 +27,7 @@ class FloorLastRecordRepository implements LastRecordsRepository{
   @override
   Future<LastRecord> getLastRecord() async{
     final entity = await _database.lastRecordDao.getLastRecord();
-    print("getLastRecord type:${entity!.type}");
+    // print("getLastRecord type:${entity!.type}");
     // LastRecord record =_covertFromDatabase(entity!);
     return _covertFromDatabase(entity!);
   }

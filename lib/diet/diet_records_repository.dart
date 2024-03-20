@@ -1,4 +1,4 @@
-import 'diet_record.dart';
+import './diet_record.dart';
 
 abstract class DietRecordsRepository{
   Future<void> addDietRecord(DietRecord record);

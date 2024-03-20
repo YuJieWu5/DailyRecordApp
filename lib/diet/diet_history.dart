@@ -1,8 +1,8 @@
-import 'package:cpsc5250hw/edit_diet_record_form.dart';
+import 'package:cpsc5250hw/diet/edit_diet_record_form.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import './diet_record.dart';
-import 'package:cpsc5250hw/diet_records_view_model.dart';
+import '../diet/diet_record.dart';
+import 'package:cpsc5250hw/diet/diet_records_view_model.dart';
 
 class DietHistory extends StatefulWidget {
   const DietHistory({super.key});
