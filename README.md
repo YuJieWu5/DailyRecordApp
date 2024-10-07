@@ -9,7 +9,7 @@ Technologies: Flutter, Firebase(Authorization, Function, Firestore Database), Cu
 ## Screenshots
 
 <div style="display: flex; justify-content: center;">
-    <img src="assets/emotion" alt="screenshot1" width="350" />
+    <img src="assets/emotion.png" alt="screenshot1" width="350" />
         <p style="font-style: italic;">The Emotion Record Page.</p>
 </div>
 <div style="display: flex; justify-content: center;">
