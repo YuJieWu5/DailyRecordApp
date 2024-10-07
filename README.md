@@ -1,10 +1,8 @@
 # Daily Record App
 
-<img src="assets/emotion.png" alt="Home Page" width="600" />
 
 An application include emotion, diet, workout record pages.
 Technologies: Flutter, Firebase(Authorization, Function, Firestore Database), Cupertino UI, Material UI, MVVM Design Pattern, SQLite
-
 
 ## Screenshots
 
